@@ -87,6 +87,7 @@ export default function Apply({ navigate, isStandalone = false }) {
       if (!formData.email.trim()) newErrors.email = true;
       if (!formData.whatYouDo.trim()) newErrors.whatYouDo = true;
     } else if (step === 2) {
+      if (!formData.trackChoice) newErrors.trackChoice = true;
       if (!formData.soldSomething.trim()) newErrors.soldSomething = true;
       if (!formData.whatToCut.trim()) newErrors.whatToCut = true;
       if (!formData.backgroundStory.trim()) newErrors.backgroundStory = true;
@@ -152,8 +153,11 @@ export default function Apply({ navigate, isStandalone = false }) {
         });
 
         const result = await res.json();
-        if (!res.ok || !result.ok) {
-          throw new Error(result.error || (Array.isArray(result.errors) ? result.errors.join(', ') : 'Failed to submit application.'));
+        if (!res.ok) {
+          throw new Error(result.error || (Array.isArray(result.errors) ? result.errors.join(', ') : `Error ${res.status}: Failed to submit application.`));
+        }
+        if (result.error) {
+          throw new Error(result.error);
         }
 
         setIsSubmitted(true);
@@ -344,8 +348,8 @@ export default function Apply({ navigate, isStandalone = false }) {
                             <span className="track-img-sublabel">Maker Track</span>
                           </div>
                           <div
-                            className={`track-image-card ${formData.trackChoice === 'skills' ? 'selected' : 'dimmed'}`}
-                            onClick={() => setFormData(prev => ({ ...prev, trackChoice: 'skills' }))}
+                            className={`track-image-card ${formData.trackChoice === 'sevadaata' ? 'selected' : 'dimmed'}`}
+                            onClick={() => setFormData(prev => ({ ...prev, trackChoice: 'sevadaata' }))}
                           >
                             <img src="/hunarkhana.jpg" alt="SevaDaata" className="track-img" />
                             <span className="track-img-label">SEVADAATA</span>

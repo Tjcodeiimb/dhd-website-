@@ -61,26 +61,14 @@ export default function Hero({ navigate }) {
           <h2>India doesn't have an education system. It has an exam system.</h2>
           <p className="sub">You've been its customer since you were 16.</p>
           <a 
-            className="btn" 
-            href="/apply" 
+            className="btn btn-primary" 
+            href="/apply"
             onClick={(e) => {
               e.preventDefault();
               navigate('/apply');
             }}
           >
             Apply for Cohort 1
-          </a>
-          <br />
-          <a 
-            className="link" 
-            style={{ fontSize: '14px' }} 
-            href="#alt"
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById('alt')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            So what's the alternative? ↓
           </a>
         </div>
         <div className="receipt">

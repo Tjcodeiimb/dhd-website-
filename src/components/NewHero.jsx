@@ -250,23 +250,6 @@ export default function NewHero({ navigate, isDesktopViewport }) {
             >
               Apply For Cohort 1
             </a>
-            <a
-              className="hero-alt-link"
-              href="#alt"
-              onClick={(e) => {
-                e.preventDefault();
-                const smoother = ScrollSmoother.get();
-                if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
-                if (smoother) {
-                  smoother.scrollTo('#alt', true);
-                } else {
-                  const el = document.getElementById('alt');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            >
-              So what&rsquo;s the alternative?
-            </a>
           </div>
         </div>
 
@@ -401,18 +384,6 @@ export default function NewHero({ navigate, isDesktopViewport }) {
             }}
           >
             Apply For Cohort 1
-          </a>
-          <a
-            className="mobile-alt-text-link"
-            href="#alt"
-            onClick={(e) => {
-              e.preventDefault();
-              const smoother = ScrollSmoother.get();
-              if (smoother) smoother.scrollTo('#alt', true);
-              else document.getElementById('alt')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            so what&rsquo;s the alternative? <span className="plus-hint">+</span>
           </a>
           <div className="mobile-pagebreak-dots">&bull; &bull; &bull;</div>
         </div>

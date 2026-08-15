@@ -5,7 +5,7 @@ export default function Segue({ navigate }) {
     <div className="frame">
       <span className="tag">Home · 04 · Segue</span>
       <div className="segue">
-        <span>Still not convinced? Fair.</span>
+        <span>Here are some interesting facts</span>
         <a 
           className="link" 
           href="/read-this"

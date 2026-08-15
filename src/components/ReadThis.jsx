@@ -6,8 +6,8 @@ export default function ReadThis({ navigate, isStandalone = false }) {
       <div className="readthis-body">
         <div className="readthis-header">
           <h2 className="readthis-title">
-            Still not convinced? <br />
-            Check Our <span className="readthis-highlight-box">Facts.</span>
+            Here are some <br />
+            Interesting <span className="readthis-highlight-box">Facts.</span>
           </h2>
         </div>
 

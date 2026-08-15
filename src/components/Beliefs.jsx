@@ -109,7 +109,7 @@ export default function Beliefs({ navigate }) {
 
         {/* Inline Segue Link Block */}
         <div className="beliefs-segue">
-          <span className="beliefs-segue-label">Still not convinced? Fair.</span>
+          <span className="beliefs-segue-label">Here are some interesting facts</span>
           <a
             className="beliefs-segue-link"
             href="/read-this"
