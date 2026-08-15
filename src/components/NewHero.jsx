@@ -248,7 +248,7 @@ export default function NewHero({ navigate, isDesktopViewport }) {
                 navigate('/apply');
               }}
             >
-              Apply For Cohort 1
+              Apply For Cohort 2
             </a>
           </div>
         </div>
@@ -383,7 +383,7 @@ export default function NewHero({ navigate, isDesktopViewport }) {
               navigate('/apply');
             }}
           >
-            Apply For Cohort 1
+            Apply For Cohort 2
           </a>
           <div className="mobile-pagebreak-dots">&bull; &bull; &bull;</div>
         </div>

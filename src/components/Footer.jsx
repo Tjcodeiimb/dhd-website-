@@ -133,7 +133,7 @@ export default function Footer({ navigate }) {
             Made by <a href="https://www.upforgeconsulting.com" target="_blank" rel="noreferrer">UpForge Consulting</a>
           </div>
           <div className="footer-cohort-details">
-            Cohort 1 • Seats Capped
+            Cohort 2 • Seats Capped
           </div>
         </div>
       </div>

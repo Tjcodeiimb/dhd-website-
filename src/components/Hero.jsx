@@ -57,7 +57,7 @@ export default function Hero({ navigate }) {
       <span className="tag">Home · 01 · Hero</span>
       <div className="hero">
         <div style={{ marginLeft: '-16px' }}>
-          <div className="eyebrow">Dhandha School · Cohort 1</div>
+          <div className="eyebrow">Dhandha School · Cohort 2</div>
           <h2>India doesn't have an education system. It has an exam system.</h2>
           <p className="sub">You've been its customer since you were 16.</p>
           <a 
@@ -68,7 +68,7 @@ export default function Hero({ navigate }) {
               navigate('/apply');
             }}
           >
-            Apply for Cohort 1
+            Apply for Cohort 2
           </a>
         </div>
         <div className="receipt">

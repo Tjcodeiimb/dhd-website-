@@ -76,7 +76,7 @@ export default function BottomSection({ navigate }) {
             Stop preparing. Start <span className="cta-highlight-box yellow-highlight">building.</span>
           </h2>
           <p className="bottom-cta-sub">
-            Applications for Cohort 1 close 15 September. Seats are capped and we read every application personally.
+            Applications for Cohort 2 close 15 September. Seats are capped and we read every application personally.
           </p>
           <a
             className="bottom-cta-btn"
@@ -86,7 +86,7 @@ export default function BottomSection({ navigate }) {
               navigate('/apply');
             }}
           >
-            Apply for Cohort 1
+            Apply for Cohort 2
           </a>
         </div>
       </section>

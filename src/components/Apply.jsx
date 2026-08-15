@@ -175,7 +175,7 @@ export default function Apply({ navigate, isStandalone = false }) {
         {/* Header Text */}
         <div className="apply-header">
           <h2 className="apply-title">
-            <span className="apply-highlight-box">Apply for Cohort 1</span>
+            <span className="apply-highlight-box">Apply for Cohort 2</span>
           </h2>
           <p className="apply-sub">
             This is an application, not a checkout. We read every answer personally. About 5 minutes. Honest and specific beats polished and vague.
@@ -235,7 +235,7 @@ export default function Apply({ navigate, isStandalone = false }) {
                   </div>
                 </div>
                 <div className="success-next-box">
-                  <p>We have received your answers and will review your application for <span className="success-em">Cohort 1</span></p>
+                  <p>We have received your answers and will review your application for <span className="success-em">Cohort 2</span></p>
                 </div>
                 <button type="button" className="success-home-btn" onClick={() => { if (isStandalone) { window.location.href = '/'; } else { navigate('/'); } }}>
                   ← Back to Homepage

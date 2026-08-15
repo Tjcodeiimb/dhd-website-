@@ -59,7 +59,7 @@ export default function ReadThis({ navigate, isStandalone = false }) {
             }}
           >
             Convinced? <br />
-            Apply for Cohort 1
+            Apply for Cohort 2
           </a>
         </div>
       </div>

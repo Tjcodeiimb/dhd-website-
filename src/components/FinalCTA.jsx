@@ -9,17 +9,17 @@ export default function FinalCTA({ navigate }) {
       <div className="cta-center">
         <h2>Stop preparing. Start building.</h2>
         <p className="sub" style={{ margin: '0 auto 16px', maxWidth: '48ch' }}>
-          Applications for Cohort 1 close 15 September. Seats are capped and we read every application personally.
+          Applications for Cohort 2 will close soon. Seats are capped and we read every application personally.
         </p>
-        <a 
-          className="btn" 
+        <a
+          className="btn"
           href="/apply"
           onClick={(e) => {
             e.preventDefault();
             navigate('/apply');
           }}
         >
-          Apply for Cohort 1
+          Apply for Cohort 2
         </a>
         &nbsp;&nbsp;
         {waitlistJoined ? (
@@ -27,8 +27,8 @@ export default function FinalCTA({ navigate }) {
             You're on the list ✓
           </span>
         ) : (
-          <a 
-            className="btn ghost" 
+          <a
+            className="btn ghost"
             href="#"
             onClick={(e) => {
               e.preventDefault();
