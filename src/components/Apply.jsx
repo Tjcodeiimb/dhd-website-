@@ -81,7 +81,7 @@ export default function Apply({ navigate, isStandalone = false }) {
     whatsapp: '',
     email: '',
     whatYouDo: '',
-    trackChoice: 'maker',
+    trackChoice: '',
     soldSomething: '',
     whatToCut: '',
     backgroundStory: '',
@@ -176,7 +176,6 @@ export default function Apply({ navigate, isStandalone = false }) {
       if (!formData.email.trim()) newErrors.email = true;
       if (!formData.whatYouDo.trim()) newErrors.whatYouDo = true;
     } else if (step === 2) {
-      if (!formData.trackChoice) newErrors.trackChoice = true;
       if (!formData.soldSomething.trim()) newErrors.soldSomething = true;
       if (!formData.whatToCut.trim()) newErrors.whatToCut = true;
       if (!formData.backgroundStory.trim()) newErrors.backgroundStory = true;
@@ -269,7 +268,7 @@ export default function Apply({ navigate, isStandalone = false }) {
           whatsapp: formData.whatsapp.trim(),
           city: formData.city.trim(),
           current_role: formData.whatYouDo.trim(),
-          track: formData.trackChoice === 'maker' ? 'karkhana' : 'sevadaata',
+          track: formData.trackChoice || '',
           sold_story: formData.soldSomething.trim(),
           time_commitment: formData.whatToCut.trim(),
           background_story: formData.backgroundStory.trim(),
@@ -401,7 +400,7 @@ export default function Apply({ navigate, isStandalone = false }) {
             >
               <span className="apply-step-num">Step 2</span>
               <h3>Your mindset</h3>
-              <p>Track choice + &ldquo;tell us something you&rsquo;ve sold&rdquo; + &ldquo;what will you cut to make 10 hrs/week&rdquo;.</p>
+              <p>&ldquo;Tell us something you&rsquo;ve sold&rdquo; + &ldquo;what will you cut to make 25 hrs/week&rdquo;.</p>
             </div>
 
             <div
@@ -546,32 +545,11 @@ export default function Apply({ navigate, isStandalone = false }) {
                 {/* ── STEP 2 ── */}
                 {activeStep === 2 && (
                   <div className="purple-form-step step2-layout">
+                    <h3 className="purple-step-title" style={{ marginTop: 0, marginBottom: '1.25rem' }}>
+                      <span className="step-highlight-box">Step 2: Your Mindset</span>
+                    </h3>
                     <div className="step2-body">
-                      {/* Left: Track Image Selector */}
-                      <div className="track-image-selector">
-                        <h3 className="purple-step-title" style={{ marginTop: 0, marginBottom: '1.5rem' }}><span className="step-highlight-box">Step 2: Your Mindset</span></h3>
-                        <p className="track-choose-prompt">Choose your track</p>
-                        <div className="track-image-cards">
-                          <div
-                            className={`track-image-card ${formData.trackChoice === 'maker' ? 'selected' : 'dimmed'}`}
-                            onClick={() => setFormData(prev => ({ ...prev, trackChoice: 'maker' }))}
-                          >
-                            <img src="/karkhana.jpg" alt="Karkhana" className="track-img" />
-                            <span className="track-img-label">KARKHANA</span>
-                            <span className="track-img-sublabel">Maker Track</span>
-                          </div>
-                          <div
-                            className={`track-image-card ${formData.trackChoice === 'sevadaata' ? 'selected' : 'dimmed'}`}
-                            onClick={() => setFormData(prev => ({ ...prev, trackChoice: 'sevadaata' }))}
-                          >
-                            <img src="/hunarkhana.jpg" alt="SevaDaata" className="track-img" />
-                            <span className="track-img-label">SEVADAATA</span>
-                            <span className="track-img-sublabel">Skills Track</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Right: Textareas */}
+                      {/* Textareas */}
                       <div className="step2-textareas">
                         <div className="purple-form-group">
                           <label htmlFor="soldSomething">Tell us something you&rsquo;ve sold in the past (or explain how you would sell it)</label>
@@ -587,7 +565,7 @@ export default function Apply({ navigate, isStandalone = false }) {
                         </div>
 
                         <div className="purple-form-group">
-                          <label htmlFor="whatToCut">What will you cut from your routine to make 10 hours/week?</label>
+                          <label htmlFor="whatToCut">What will you cut from your routine to make at least 25 hours a week?</label>
                           <textarea
                             id="whatToCut"
                             name="whatToCut"
@@ -613,7 +591,7 @@ export default function Apply({ navigate, isStandalone = false }) {
                         </div>
 
                         <div className="purple-form-group">
-                          <label htmlFor="whyJoin">Why should you be part of the founding cohort of Dhandha School?</label>
+                          <label htmlFor="whyJoin">Why should you be a part of Dhandha School?</label>
                           <textarea
                             id="whyJoin"
                             name="whyJoin"
@@ -678,7 +656,7 @@ export default function Apply({ navigate, isStandalone = false }) {
                               onChange={handleInputChange}
                               className={errors.commitCheckpoint ? 'error' : ''}
                             />
-                            <span className={`checkbox-text ${errors.commitCheckpoint ? 'text-error' : ''}`}>I commit to completing weekly checkpoints for my selected track alone.</span>
+                            <span className={`checkbox-text ${errors.commitCheckpoint ? 'text-error' : ''}`}>I commit to completing weekly checkpoints.</span>
                           </label>
                         </div>
 
@@ -687,10 +665,10 @@ export default function Apply({ navigate, isStandalone = false }) {
                           <div className="step3-fee-left">
                             <p className="step3-section-label">Program Fee</p>
                             <div className="step3-fee-amount">
-                              <span className="step3-fee-crossed">₹14,999</span>
+                              <span className="step3-fee-crossed">₹19,999</span>
                               <span className="step-highlight-box fee-amount-badge">{APPLICATION_FEE}</span>
                             </div>
-                            <p className="step3-fee-note">The founding cohort will be given 100% scholarships. You only pay the {APPLICATION_FEE} application fee.</p>
+                            <p className="step3-fee-note">Scholarships will be extended based on the merit in your application. You only pay the {APPLICATION_FEE} application fee right now.</p>
                           </div>
                         </div>
                       </div>
