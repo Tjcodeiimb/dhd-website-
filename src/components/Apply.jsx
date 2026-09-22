@@ -93,7 +93,7 @@ export default function Apply({ navigate, isStandalone = false }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [paymentId, setPaymentId] = useState(() => {
-    return readPending()?.paymentId || 'pay_TfApCt5k7a5qYq';
+    return readPending()?.paymentId || '';
   });
   const [apiError, setApiError] = useState('');
   const [errors, setErrors] = useState({});
@@ -113,7 +113,7 @@ export default function Apply({ navigate, isStandalone = false }) {
 
     if (paid) {
       if (stored?.formData) setFormData(stored.formData);
-      const pid = params.get('razorpay_payment_id') || stored?.paymentId || 'pay_TfApCt5k7a5qYq';
+      const pid = params.get('razorpay_payment_id') || stored?.paymentId || '';
       setPaymentId(pid);
       setIsSubmitted(true);
       clearPending();
