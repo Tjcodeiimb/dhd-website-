@@ -268,7 +268,7 @@ export default function Apply({ navigate, isStandalone = false }) {
           whatsapp: formData.whatsapp.trim(),
           city: formData.city.trim(),
           current_role: formData.whatYouDo.trim(),
-          track: formData.trackChoice || '',
+          track: formData.trackChoice || 'karkhana',
           sold_story: formData.soldSomething.trim(),
           time_commitment: formData.whatToCut.trim(),
           background_story: formData.backgroundStory.trim(),
