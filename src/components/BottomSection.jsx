@@ -76,7 +76,7 @@ export default function BottomSection({ navigate }) {
             Stop preparing. Start <span className="cta-highlight-box yellow-highlight">building.</span>
           </h2>
           <p className="bottom-cta-sub">
-            Applications for Cohort 2 close 15 September. Seats are capped and we read every application personally.
+            Applications are open for Cohort 2. Cohort 2 will tentatively start end of October, and you will hear back from us within 72 hours of applying.
           </p>
           <a
             className="bottom-cta-btn"

@@ -141,15 +141,6 @@
   color: #666;
 }
 
-.footer-upforge-link a {
-  color: #1d4ed8;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.footer-upforge-link a:hover {
-  text-decoration: underline;
-}
 
 /* Responsive */
 @media (max-width: 1180px) {

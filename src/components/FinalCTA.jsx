@@ -9,7 +9,7 @@ export default function FinalCTA({ navigate }) {
       <div className="cta-center">
         <h2>Stop preparing. Start building.</h2>
         <p className="sub" style={{ margin: '0 auto 16px', maxWidth: '48ch' }}>
-          Applications for Cohort 2 will close soon. Seats are capped and we read every application personally.
+          Applications are open for Cohort 2. Cohort 2 will tentatively start end of October, and you will hear back from us within 72 hours of applying.
         </p>
         <a
           className="btn"

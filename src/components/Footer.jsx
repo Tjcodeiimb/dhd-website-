@@ -129,9 +129,6 @@ export default function Footer({ navigate }) {
           <div className="footer-copyright">
             © {new Date().getFullYear()} Dhandha School. All rights reserved.
           </div>
-          <div className="footer-upforge-link">
-            Made by <a href="https://www.upforgeconsulting.com" target="_blank" rel="noreferrer">UpForge Consulting</a>
-          </div>
           <div className="footer-cohort-details">
             Cohort 2 • Seats Capped
           </div>
