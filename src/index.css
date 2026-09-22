@@ -3823,7 +3823,7 @@ h3,
   margin-left: -0.5rem;
 }
 
-.free-to-apply-badge {
+.fee-amount-badge {
   font-family: 'Poppins', sans-serif;
   font-weight: 900;
   font-size: 2.2rem;
@@ -3835,6 +3835,19 @@ h3,
   display: inline-block;
   transform: rotate(-2deg);
   white-space: nowrap;
+}
+
+.apply-payment-pending {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1C1B17;
+  background: #FDE68A;
+  border: 2px solid #1C1B17;
+  border-radius: 6px;
+  padding: 0.6rem 0.9rem;
+  margin: 12px 0 0;
+  text-align: center;
 }
 
 .purple-step-title {
