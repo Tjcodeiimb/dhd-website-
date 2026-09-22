@@ -115,6 +115,7 @@ export default {
       );
     }
 
+
     // Submit application
     if (url.pathname === '/api/apply' && request.method === 'POST') {
       let body;
