@@ -305,8 +305,11 @@ const PillNav = ({
             logoRef.current = el;
           }}
         >
-          <span className="nav-brand-dhandha">DHANDHA</span>
-          <span className="nav-brand-school">school</span>
+          <img
+            src="/logo-ink.png"
+            alt="Dhandha School"
+            className="nav-brand-img"
+          />
         </div>
 
         {/* Desktop Nav Items */}

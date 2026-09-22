@@ -22,8 +22,9 @@ export default function Navbar({ navigate }) {
         <span 
           className="logo" 
           onClick={() => navigate('/')}
+          style={{ cursor: 'pointer' }}
         >
-          DHANDHA SCHOOL
+          <img src="/logo-ink.png" alt="Dhandha School" style={{ height: '30px', width: 'auto', display: 'block' }} />
         </span>
         <nav className="navbar-links">
           <button 

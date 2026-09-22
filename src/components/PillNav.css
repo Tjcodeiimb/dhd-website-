@@ -56,44 +56,16 @@
   -ms-user-select: none;
 }
 
-.nav-brand-dhandha {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 800;
-  font-size: 1.35rem;
-  letter-spacing: -0.01em;
-  color: #000000 !important;
-  line-height: 1;
-  background: transparent !important;
+.nav-brand-img {
+  height: 32px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  transition: transform 0.2s ease;
 }
 
-.nav-brand-school {
-  font-family: 'Caveat', cursive;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #d97706 !important; /* Golden Amber */
-  transform: rotate(-6deg) translateY(-0.06rem);
-  display: inline-block;
-  line-height: 1.1;
-  padding-right: 0.65rem !important;
-  margin-right: 0.2rem !important;
-  overflow: visible !important;
-  background: transparent !important;
-  will-change: transform;
-}
-
-/* Dark Mode Logo Overrides */
-@media (prefers-color-scheme: dark) {
-  .nav-brand-dhandha {
-    color: var(--ink, #ffffff) !important;
-  }
-}
-
-:root[data-theme="dark"] .nav-brand-dhandha {
-  color: var(--ink, #ffffff) !important;
-}
-
-.is-home .nav-brand-dhandha {
-  color: #000000 !important;
+.nav-logo-container:hover .nav-brand-img {
+  transform: scale(1.03);
 }
 
 /* ==========================================
@@ -280,19 +252,9 @@
     transform: scale(0.96);
   }
 
-  /* Force dark logo on mobile because background is always cream */
-  .nav-brand-dhandha {
-    color: #1C1B17 !important;
-    font-size: 1.15rem !important;
-    flex-shrink: 0;
-  }
-
-  .nav-brand-school {
-    font-size: 1.25rem !important;
-    padding-right: 0.65rem !important;
-    margin-right: 0.25rem !important;
-    overflow: visible !important;
-    flex-shrink: 0;
+  .nav-brand-img {
+    height: 26px;
+    width: auto;
   }
 }
 

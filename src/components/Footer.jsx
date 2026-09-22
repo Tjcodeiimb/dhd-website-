@@ -71,9 +71,8 @@ export default function Footer({ navigate }) {
         <div className="sec8-footer-grid">
           {/* Column 1 (Brand) */}
           <div className="sec8-col sec8-col-brand">
-            <div className="brand-logo">
-              <span className="brand-dhandha">DHANDHA</span>
-              <span className="brand-school">school</span>
+            <div className="brand-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+              <img src="/logo-ink.png" alt="Dhandha School" className="footer-brand-img" />
             </div>
             <p className="brand-desc">
               A new kind of business school: practical, affordable, built for the people actually building things.

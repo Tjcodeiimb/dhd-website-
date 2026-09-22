@@ -42,29 +42,15 @@
 
 .sec8-col-brand .brand-logo {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
+  align-items: center;
   margin-bottom: 16px;
 }
 
-.brand-dhandha {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 900;
-  font-size: 28px;
-  color: #000;
-  line-height: 1;
-}
-
-.brand-school {
-  font-family: 'Caveat', cursive;
-  color: #d97706;
-  font-size: 32px;
-  line-height: 1;
-  transform: rotate(-6deg);
-  display: inline-block;
-  padding-right: 0.65rem !important;
-  margin-right: 0.25rem !important;
-  overflow: visible !important;
+.footer-brand-img {
+  height: 38px;
+  width: auto;
+  display: block;
+  object-fit: contain;
 }
 
 .brand-desc {
@@ -182,12 +168,9 @@
     margin-bottom: 10px;
   }
 
-  .brand-dhandha {
-    font-size: 22px;
-  }
-
-  .brand-school {
-    font-size: 26px;
+  .footer-brand-img {
+    height: 30px;
+    width: auto;
   }
 
   .brand-desc {
