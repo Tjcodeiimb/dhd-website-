@@ -6,10 +6,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // Forward /api/* to the local Cloudflare Worker (wrangler dev)
+      // Forward /api/* to live Cloudflare Worker (or local worker if VITE_API_BACKEND is set)
       '/api': {
-        target: 'http://localhost:8787',
+        target: process.env.VITE_API_BACKEND || 'https://dhandha-api.gauravkalal134.workers.dev',
         changeOrigin: true,
+        secure: true,
       },
     },
   },

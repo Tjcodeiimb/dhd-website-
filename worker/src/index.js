@@ -138,6 +138,9 @@ export default {
         how_found:        body.how_found,          // array — stored as JSON in D1
         attend_commit:    Boolean(body.attend_commit),
         checkpoint_commit: Boolean(body.checkpoint_commit),
+        // Payment
+        payment_id:       body.payment_id ? String(body.payment_id).trim() : '',
+        status:           body.payment_id ? 'paid' : (body.status ? String(body.status).trim() : 'pending'),
       };
 
       // 1️⃣  Save to D1 (primary store — error blocks submission)

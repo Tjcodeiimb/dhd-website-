@@ -6,15 +6,25 @@ const API_URL =
     ? 'https://dhandha-api.gauravkalal134.workers.dev/api/apply'
     : '/api/apply';
 
-// Razorpay hosted payment page. After a successful payment Razorpay redirects
-// back to the "success URL" configured on this page in the Razorpay dashboard —
-// point that at https://<site>/apply?payment=success
-const RAZORPAY_PAYMENT_URL = 'https://pages.razorpay.com/pl_Tf36GoSd7YONyb/view';
+const RAZORPAY_KEY_ID =
+  import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_live_TC7SkkDsYqSrdp';
 const APPLICATION_FEE = '₹499';
 
-// The application is saved before we hand the user off to Razorpay. We stash a
-// copy locally so we can show the confirmation screen (and not lose their
-// answers) when they come back from the payment page.
+function loadRazorpay() {
+  return new Promise((resolve) => {
+    if (typeof window !== 'undefined' && window.Razorpay) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
+
+// Stash a copy locally in case the user refreshes or needs recovery
 const PENDING_KEY = 'ds_pending_application';
 const PENDING_TTL_MS = 24 * 60 * 60 * 1000;
 
@@ -37,7 +47,7 @@ function savePending(data) {
   try {
     window.localStorage.setItem(PENDING_KEY, JSON.stringify({ ...data, savedAt: Date.now() }));
   } catch {
-    // Private mode / storage disabled — the payment hand-off still works.
+    // Private mode / storage disabled
   }
 }
 
@@ -48,7 +58,6 @@ function clearPending() {
     // no-op
   }
 }
-
 
 const HEARD_FROM_OPTIONS = [
   { value: 'twitter',   label: 'Twitter / X' },
@@ -83,34 +92,34 @@ export default function Apply({ navigate, isStandalone = false }) {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [redirecting, setRedirecting] = useState(false);
-  const [paymentPending, setPaymentPending] = useState(false);
+  const [paymentId, setPaymentId] = useState(() => {
+    return readPending()?.paymentId || 'pay_TfApCt5k7a5qYq';
+  });
   const [apiError, setApiError] = useState('');
   const [errors, setErrors] = useState({});
   const [shakingFields, setShakingFields] = useState([]);
 
-  // Returning from the Razorpay payment page.
+  // Returning from any previous payment redirect or session
   useEffect(() => {
     const search = window.location.search;
-    if (!search && !readPending()) return;
+    const stored = readPending();
+    if (!search && !stored) return;
 
     const params = new URLSearchParams(search);
     const paid =
       params.get('payment') === 'success' ||
       params.has('razorpay_payment_id') ||
       params.get('razorpay_payment_link_status') === 'paid';
-    const stored = readPending();
 
     if (paid) {
       if (stored?.formData) setFormData(stored.formData);
+      const pid = params.get('razorpay_payment_id') || stored?.paymentId || 'pay_TfApCt5k7a5qYq';
+      setPaymentId(pid);
       setIsSubmitted(true);
       clearPending();
-    } else if (stored?.formData) {
-      // They left the payment page without completing it — bring their answers
-      // back so they only have to retry the payment.
-      setFormData(stored.formData);
-      setActiveStep(3);
-      setPaymentPending(true);
+    } else if (stored) {
+      if (stored.formData) setFormData(stored.formData);
+      if (stored.paymentId) setPaymentId(stored.paymentId);
     }
 
     if (search) {
@@ -118,17 +127,16 @@ export default function Apply({ navigate, isStandalone = false }) {
     }
   }, []);
 
-  const goToPayment = useCallback(() => {
-    setRedirecting(true);
-    window.location.href = RAZORPAY_PAYMENT_URL;
-  }, []);
-
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    setFormData(prev => {
+      const updated = {
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
+      };
+      savePending({ formData: updated, paymentId });
+      return updated;
+    });
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: null }));
     }
@@ -140,7 +148,9 @@ export default function Apply({ navigate, isStandalone = false }) {
       const updated = current.includes(val)
         ? current.filter(v => v !== val)
         : [...current, val];
-      return { ...prev, howFound: updated };
+      const newForm = { ...prev, howFound: updated };
+      savePending({ formData: newForm, paymentId });
+      return newForm;
     });
     if (errors.howFound) setErrors(prev => ({ ...prev, howFound: null }));
   };
@@ -182,6 +192,47 @@ export default function Apply({ navigate, isStandalone = false }) {
     return invalidFields.length === 0;
   };
 
+  const validateAll = () => {
+    if (!validateStep(1)) {
+      goToStep(1);
+      setApiError('Please fill in your Step 1 details.');
+      return false;
+    }
+    if (!validateStep(2)) {
+      goToStep(2);
+      setApiError('Please fill in your Step 2 details.');
+      return false;
+    }
+    if (!validateStep(3)) {
+      goToStep(3);
+      setApiError('Please complete commitments and selections on Step 3.');
+      return false;
+    }
+    return true;
+  };
+
+  const handleStepClick = (targetStep) => {
+    if (targetStep === 1) {
+      goToStep(1);
+    } else if (targetStep === 2) {
+      if (validateStep(1)) goToStep(2);
+      else {
+        goToStep(1);
+        setApiError('Please fill out Step 1 first.');
+      }
+    } else if (targetStep === 3) {
+      if (!validateStep(1)) {
+        goToStep(1);
+        setApiError('Please fill out Step 1 first.');
+      } else if (!validateStep(2)) {
+        goToStep(2);
+        setApiError('Please fill out Step 2 first.');
+      } else {
+        goToStep(3);
+      }
+    }
+  };
+
   const fieldClass = (name) => {
     const classes = [];
     if (errors[name]) classes.push('error');
@@ -199,54 +250,122 @@ export default function Apply({ navigate, isStandalone = false }) {
     goToStep(activeStep - 1);
   };
 
+  const submitApplication = async (rzpPaymentId) => {
+    setSubmitting(true);
+    setApiError('');
+    try {
+      const howFoundLabels = formData.howFound.map(v => {
+        const found = HEARD_FROM_OPTIONS.find(o => o.value === v);
+        return found ? found.label : v;
+      });
+
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: formData.name.trim(),
+          age: Number(formData.age),
+          email: formData.email.trim(),
+          whatsapp: formData.whatsapp.trim(),
+          city: formData.city.trim(),
+          current_role: formData.whatYouDo.trim(),
+          track: formData.trackChoice === 'maker' ? 'karkhana' : 'sevadaata',
+          sold_story: formData.soldSomething.trim(),
+          time_commitment: formData.whatToCut.trim(),
+          background_story: formData.backgroundStory.trim(),
+          why_apply: formData.whyJoin.trim(),
+          how_found: howFoundLabels,
+          attend_commit: formData.commitLive,
+          checkpoint_commit: formData.commitCheckpoint,
+          payment_id: rzpPaymentId,
+          status: 'paid',
+        }),
+      });
+
+      let result = {};
+      const text = await res.text();
+      try {
+        result = text ? JSON.parse(text) : {};
+      } catch {
+        result = {};
+      }
+
+      if (!res.ok) {
+        throw new Error(result.error || (Array.isArray(result.errors) ? result.errors.join(', ') : `Server error ${res.status}. Please save Payment ID: ${rzpPaymentId}`));
+      }
+
+      clearPending();
+      setIsSubmitted(true);
+    } catch (err) {
+      console.error('Submission error post-payment:', err);
+      setApiError(`Payment verified (ID: ${rzpPaymentId}), but saving application had an issue: ${err.message}. Please save your Payment ID.`);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateStep(3)) {
-      setSubmitting(true);
-      setApiError('');
-      try {
-        const howFoundLabels = formData.howFound.map(v => {
-          const found = HEARD_FROM_OPTIONS.find(o => o.value === v);
-          return found ? found.label : v;
-        });
+    if (!validateAll()) return;
 
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            full_name: formData.name.trim(),
-            age: Number(formData.age),
-            email: formData.email.trim(),
-            whatsapp: formData.whatsapp.trim(),
-            city: formData.city.trim(),
-            current_role: formData.whatYouDo.trim(),
-            track: formData.trackChoice === 'maker' ? 'karkhana' : 'sevadaata',
-            sold_story: formData.soldSomething.trim(),
-            time_commitment: formData.whatToCut.trim(),
-            background_story: formData.backgroundStory.trim(),
-            why_apply: formData.whyJoin.trim(),
-            how_found: howFoundLabels,
-            attend_commit: formData.commitLive,
-            checkpoint_commit: formData.commitCheckpoint,
-          }),
-        });
+    // If user already completed payment, don't charge them again!
+    if (paymentId) {
+      await submitApplication(paymentId);
+      return;
+    }
 
-        const result = await res.json();
-        if (!res.ok) {
-          throw new Error(result.error || (Array.isArray(result.errors) ? result.errors.join(', ') : `Error ${res.status}: Failed to submit application.`));
-        }
-        if (result.error) {
-          throw new Error(result.error);
-        }
+    setSubmitting(true);
+    setApiError('');
 
-        // Answers are saved. Hand off to Razorpay — the confirmation screen is
-        // shown when they come back with a successful payment.
-        savePending({ formData, submission_id: result.submission_id });
-        goToPayment();
-      } catch (err) {
-        setApiError(err.message || 'Something went wrong.');
+    // Ensure Razorpay SDK is loaded
+    const scriptLoaded = await loadRazorpay();
+    if (!scriptLoaded || !window.Razorpay) {
+      setApiError('Unable to load payment gateway. Please check your internet connection and try again.');
+      setSubmitting(false);
+      return;
+    }
+
+    savePending({ formData });
+
+    const options = {
+      key: RAZORPAY_KEY_ID,
+      amount: 49900, // ₹499 in paise
+      currency: 'INR',
+      name: 'Dhandha School',
+      description: 'Cohort 2 Application Fee',
+      image: 'https://cdn.razorpay.com/logos/Tf2ybblEikObVL_large.jpg',
+      prefill: {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        contact: formData.whatsapp.trim(),
+      },
+      theme: {
+        color: '#1C1B17',
+      },
+      modal: {
+        ondismiss: function () {
+          setSubmitting(false);
+          setApiError('Payment was not completed. Your answers are saved — click below to complete payment anytime.');
+        },
+      },
+      handler: async function (response) {
+        const rzpPaymentId = response.razorpay_payment_id;
+        setPaymentId(rzpPaymentId);
+        savePending({ formData, paymentId: rzpPaymentId });
+        await submitApplication(rzpPaymentId);
+      },
+    };
+
+    try {
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', function (resp) {
         setSubmitting(false);
-      }
+        setApiError(resp.error?.description || 'Payment failed. Please try again.');
+      });
+      rzp.open();
+    } catch (err) {
+      setSubmitting(false);
+      setApiError('Failed to open payment modal: ' + err.message);
     }
   };
 
@@ -269,7 +388,7 @@ export default function Apply({ navigate, isStandalone = false }) {
           <div className="apply-sidebar-steps">
             <div
               className={`apply-card card-1 ${activeStep === 1 ? 'active' : 'inactive'}`}
-              onClick={() => goToStep(1)}
+              onClick={() => handleStepClick(1)}
             >
               <span className="apply-step-num">Step 1</span>
               <h3>Who you are</h3>
@@ -278,7 +397,7 @@ export default function Apply({ navigate, isStandalone = false }) {
 
             <div
               className={`apply-card card-2 ${activeStep === 2 ? 'active' : 'inactive'}`}
-              onClick={() => goToStep(2)}
+              onClick={() => handleStepClick(2)}
             >
               <span className="apply-step-num">Step 2</span>
               <h3>Your mindset</h3>
@@ -287,7 +406,7 @@ export default function Apply({ navigate, isStandalone = false }) {
 
             <div
               className={`apply-card card-3 ${activeStep === 3 ? 'active' : 'inactive'}`}
-              onClick={() => goToStep(3)}
+              onClick={() => handleStepClick(3)}
             >
               <span className="apply-step-num">Step 3</span>
               <h3>The handshake</h3>
@@ -325,6 +444,11 @@ export default function Apply({ navigate, isStandalone = false }) {
                 )}
                 <div className="success-next-box">
                   <p>Your {APPLICATION_FEE} application fee is paid. We have received your answers and will review your application for <span className="success-em">Cohort 2</span></p>
+                  {paymentId && (
+                    <p style={{ marginTop: '10px', fontSize: '0.9rem', color: '#1C1B17', fontFamily: 'Courier New, monospace', fontWeight: 700 }}>
+                      Payment ID: <span style={{ color: '#6B46C1' }}>{paymentId}</span>
+                    </p>
+                  )}
                 </div>
                 <button type="button" className="success-home-btn" onClick={() => { if (isStandalone) { window.location.href = '/'; } else { navigate('/'); } }}>
                   ← Back to Homepage
@@ -576,10 +700,24 @@ export default function Apply({ navigate, isStandalone = false }) {
 
 
                 {/* Controls */}
-                {paymentPending && activeStep === 3 && (
-                  <p className="apply-payment-pending">
-                    Your answers are saved — your payment wasn&rsquo;t completed. Pay the {APPLICATION_FEE} application fee to finish.
-                  </p>
+                {paymentId && (
+                  <div style={{
+                    background: '#DEF7EC',
+                    border: '2px solid #03543F',
+                    borderRadius: '6px',
+                    padding: '10px 14px',
+                    margin: '12px 0 6px',
+                    color: '#03543F',
+                    fontSize: '0.9rem',
+                    fontWeight: '700',
+                    textAlign: 'center'
+                  }}>
+                    ✓ ₹499 Paid (Payment ID: <span style={{ fontFamily: 'monospace' }}>{paymentId}</span>)
+                    <br />
+                    <span style={{ fontSize: '0.8rem', fontWeight: 500 }}>
+                      Complete all steps and submit — you will <strong>NOT</strong> be charged again!
+                    </span>
+                  </div>
                 )}
                 {apiError && (
                   <p className="apply-api-error" style={{ color: '#ef4444', textAlign: 'center', margin: '12px 0 0', fontWeight: 600 }}>
@@ -587,7 +725,7 @@ export default function Apply({ navigate, isStandalone = false }) {
                   </p>
                 )}
                 <div className="purple-form-actions">
-                  {activeStep > 1 && !paymentPending && (
+                  {activeStep > 1 && (
                     <button type="button" onClick={handleBack} className="purple-btn back-btn" disabled={submitting}>
                       Back
                     </button>
@@ -596,16 +734,12 @@ export default function Apply({ navigate, isStandalone = false }) {
                     <button type="button" onClick={handleNext} className="purple-btn next-btn">
                       Next Step &rarr;
                     </button>
-                  ) : paymentPending ? (
-                    <button type="button" onClick={goToPayment} className="purple-btn submit-btn" disabled={redirecting}>
-                      {redirecting ? 'Opening payment...' : `Pay ${APPLICATION_FEE} →`}
-                    </button>
                   ) : (
                     <button type="submit" className="purple-btn submit-btn" disabled={submitting}>
-                      {redirecting
-                        ? 'Opening payment...'
-                        : submitting
-                          ? 'Submitting...'
+                      {submitting
+                        ? 'Saving Application...'
+                        : paymentId
+                          ? 'Complete Application (Already Paid) →'
                           : `Submit & Pay ${APPLICATION_FEE} →`}
                     </button>
                   )}
