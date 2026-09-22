@@ -1,10 +1,53 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import ConfettiEffect from './ConfettiEffect';
 
 const API_URL =
   import.meta.env.PROD
     ? 'https://dhandha-api.gauravkalal134.workers.dev/api/apply'
     : '/api/apply';
+
+// Razorpay hosted payment page. After a successful payment Razorpay redirects
+// back to the "success URL" configured on this page in the Razorpay dashboard —
+// point that at https://<site>/apply?payment=success
+const RAZORPAY_PAYMENT_URL = 'https://pages.razorpay.com/pl_Tf36GoSd7YONyb/view';
+const APPLICATION_FEE = '₹499';
+
+// The application is saved before we hand the user off to Razorpay. We stash a
+// copy locally so we can show the confirmation screen (and not lose their
+// answers) when they come back from the payment page.
+const PENDING_KEY = 'ds_pending_application';
+const PENDING_TTL_MS = 24 * 60 * 60 * 1000;
+
+function readPending() {
+  try {
+    const raw = window.localStorage.getItem(PENDING_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed?.formData || Date.now() - parsed.savedAt > PENDING_TTL_MS) {
+      window.localStorage.removeItem(PENDING_KEY);
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function savePending(data) {
+  try {
+    window.localStorage.setItem(PENDING_KEY, JSON.stringify({ ...data, savedAt: Date.now() }));
+  } catch {
+    // Private mode / storage disabled — the payment hand-off still works.
+  }
+}
+
+function clearPending() {
+  try {
+    window.localStorage.removeItem(PENDING_KEY);
+  } catch {
+    // no-op
+  }
+}
 
 
 const HEARD_FROM_OPTIONS = [
@@ -40,9 +83,45 @@ export default function Apply({ navigate, isStandalone = false }) {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
+  const [paymentPending, setPaymentPending] = useState(false);
   const [apiError, setApiError] = useState('');
   const [errors, setErrors] = useState({});
   const [shakingFields, setShakingFields] = useState([]);
+
+  // Returning from the Razorpay payment page.
+  useEffect(() => {
+    const search = window.location.search;
+    if (!search && !readPending()) return;
+
+    const params = new URLSearchParams(search);
+    const paid =
+      params.get('payment') === 'success' ||
+      params.has('razorpay_payment_id') ||
+      params.get('razorpay_payment_link_status') === 'paid';
+    const stored = readPending();
+
+    if (paid) {
+      if (stored?.formData) setFormData(stored.formData);
+      setIsSubmitted(true);
+      clearPending();
+    } else if (stored?.formData) {
+      // They left the payment page without completing it — bring their answers
+      // back so they only have to retry the payment.
+      setFormData(stored.formData);
+      setActiveStep(3);
+      setPaymentPending(true);
+    }
+
+    if (search) {
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
+
+  const goToPayment = useCallback(() => {
+    setRedirecting(true);
+    window.location.href = RAZORPAY_PAYMENT_URL;
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -160,10 +239,12 @@ export default function Apply({ navigate, isStandalone = false }) {
           throw new Error(result.error);
         }
 
-        setIsSubmitted(true);
+        // Answers are saved. Hand off to Razorpay — the confirmation screen is
+        // shown when they come back with a successful payment.
+        savePending({ formData, submission_id: result.submission_id });
+        goToPayment();
       } catch (err) {
         setApiError(err.message || 'Something went wrong.');
-      } finally {
         setSubmitting(false);
       }
     }
@@ -178,7 +259,7 @@ export default function Apply({ navigate, isStandalone = false }) {
             <span className="apply-highlight-box">Apply for Cohort 2</span>
           </h2>
           <p className="apply-sub">
-            This is an application, not a checkout. We read every answer personally. About 5 minutes. Honest and specific beats polished and vague.
+            We read every answer personally. About 5 minutes, then a {APPLICATION_FEE} application fee. Honest and specific beats polished and vague.
           </p>
         </div>
 
@@ -210,7 +291,7 @@ export default function Apply({ navigate, isStandalone = false }) {
             >
               <span className="apply-step-num">Step 3</span>
               <h3>The handshake</h3>
-              <p>How you found us + live-attendance and checkpoint commitments. Fee shown, payable only if selected.</p>
+              <p>How you found us + live-attendance and checkpoint commitments. Then the {APPLICATION_FEE} application fee.</p>
             </div>
           </div>
 
@@ -222,20 +303,28 @@ export default function Apply({ navigate, isStandalone = false }) {
                 <div className="apply-success-header">
                   <span className="success-highlight-box">Application Received!</span>
                 </div>
-                <p className="success-thanks">Thank you, <strong>{formData.name}</strong>.</p>
-                <p className="success-tagline">We read every answer personally. Honest and specific beats polished and vague.</p>
-                <div className="success-contact-grid">
-                  <div className="success-contact-card">
-                    <span className="success-contact-label">WhatsApp</span>
-                    <span className="success-contact-value">{formData.whatsapp}</span>
+                <p className="success-thanks">
+                  {formData.name ? <>Thank you, <strong>{formData.name}</strong>.</> : 'Thank you.'}
+                </p>
+                <p className="success-tagline">Payment received. We read every answer personally. Honest and specific beats polished and vague.</p>
+                {(formData.whatsapp || formData.email) && (
+                  <div className="success-contact-grid">
+                    {formData.whatsapp && (
+                      <div className="success-contact-card">
+                        <span className="success-contact-label">WhatsApp</span>
+                        <span className="success-contact-value">{formData.whatsapp}</span>
+                      </div>
+                    )}
+                    {formData.email && (
+                      <div className="success-contact-card">
+                        <span className="success-contact-label">Email</span>
+                        <span className="success-contact-value">{formData.email}</span>
+                      </div>
+                    )}
                   </div>
-                  <div className="success-contact-card">
-                    <span className="success-contact-label">Email</span>
-                    <span className="success-contact-value">{formData.email}</span>
-                  </div>
-                </div>
+                )}
                 <div className="success-next-box">
-                  <p>We have received your answers and will review your application for <span className="success-em">Cohort 2</span></p>
+                  <p>Your {APPLICATION_FEE} application fee is paid. We have received your answers and will review your application for <span className="success-em">Cohort 2</span></p>
                 </div>
                 <button type="button" className="success-home-btn" onClick={() => { if (isStandalone) { window.location.href = '/'; } else { navigate('/'); } }}>
                   ← Back to Homepage
@@ -475,9 +564,9 @@ export default function Apply({ navigate, isStandalone = false }) {
                             <p className="step3-section-label">Program Fee</p>
                             <div className="step3-fee-amount">
                               <span className="step3-fee-crossed">₹14,999</span>
-                              <span className="step-highlight-box free-to-apply-badge">Free to Apply</span>
+                              <span className="step-highlight-box fee-amount-badge">{APPLICATION_FEE}</span>
                             </div>
-                            <p className="step3-fee-note">The founding cohort will be given 100% scholarships.</p>
+                            <p className="step3-fee-note">The founding cohort will be given 100% scholarships. You only pay the {APPLICATION_FEE} application fee.</p>
                           </div>
                         </div>
                       </div>
@@ -487,13 +576,18 @@ export default function Apply({ navigate, isStandalone = false }) {
 
 
                 {/* Controls */}
+                {paymentPending && activeStep === 3 && (
+                  <p className="apply-payment-pending">
+                    Your answers are saved — your payment wasn&rsquo;t completed. Pay the {APPLICATION_FEE} application fee to finish.
+                  </p>
+                )}
                 {apiError && (
                   <p className="apply-api-error" style={{ color: '#ef4444', textAlign: 'center', margin: '12px 0 0', fontWeight: 600 }}>
                     {apiError}
                   </p>
                 )}
                 <div className="purple-form-actions">
-                  {activeStep > 1 && (
+                  {activeStep > 1 && !paymentPending && (
                     <button type="button" onClick={handleBack} className="purple-btn back-btn" disabled={submitting}>
                       Back
                     </button>
@@ -502,9 +596,17 @@ export default function Apply({ navigate, isStandalone = false }) {
                     <button type="button" onClick={handleNext} className="purple-btn next-btn">
                       Next Step &rarr;
                     </button>
+                  ) : paymentPending ? (
+                    <button type="button" onClick={goToPayment} className="purple-btn submit-btn" disabled={redirecting}>
+                      {redirecting ? 'Opening payment...' : `Pay ${APPLICATION_FEE} →`}
+                    </button>
                   ) : (
                     <button type="submit" className="purple-btn submit-btn" disabled={submitting}>
-                      {submitting ? 'Submitting...' : 'Submit Application'}
+                      {redirecting
+                        ? 'Opening payment...'
+                        : submitting
+                          ? 'Submitting...'
+                          : `Submit & Pay ${APPLICATION_FEE} →`}
                     </button>
                   )}
                 </div>
