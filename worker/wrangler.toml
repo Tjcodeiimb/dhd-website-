@@ -14,7 +14,7 @@ database_id   = "3b9514a0-ed70-4a31-82e6-578bea482278"
 # ─── Environment Variables ───────────────────────────────────────────────────
 # The live site origin — allows your frontend to call this worker
 [vars]
-ALLOWED_ORIGIN = "https://dhandha-schoolv2.gauravkalal134.workers.dev"
+ALLOWED_ORIGIN = "*"
 
 # ─── Secrets (set via CLI, never in this file) ───────────────────────────────
 # wrangler secret put SHEETS_WEBHOOK_URL

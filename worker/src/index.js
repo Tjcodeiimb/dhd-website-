@@ -26,11 +26,27 @@ function json(data, status = 200, corsOrigin) {
   });
 }
 
+function getCorsOrigin(request, env) {
+  const reqOrigin = request.headers.get('Origin');
+  if (!reqOrigin) return env.ALLOWED_ORIGIN || '*';
+  if (
+    reqOrigin.includes('dhandhaschool.com') ||
+    reqOrigin.includes('localhost') ||
+    reqOrigin.includes('127.0.0.1') ||
+    reqOrigin.includes('workers.dev') ||
+    reqOrigin.includes('pages.dev') ||
+    reqOrigin.includes('vercel.app')
+  ) {
+    return reqOrigin;
+  }
+  return env.ALLOWED_ORIGIN || '*';
+}
+
 function corsHeaders(origin) {
   return {
     'Access-Control-Allow-Origin':  origin,
     'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Max-Age':       '86400',
   };
 }
@@ -84,7 +100,7 @@ function validate(body) {
 export default {
   async fetch(request, env) {
     const url    = new URL(request.url);
-    const origin = env.ALLOWED_ORIGIN || '*';
+    const origin = getCorsOrigin(request, env);
 
     // CORS preflight
     if (request.method === 'OPTIONS') {
