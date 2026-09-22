@@ -283,7 +283,7 @@ function escapeHtml_(value) {
  * and verify that emails arrive in your inbox.
  */
 function sendTestEmail() {
-  var testEmail = 'founder@dhandhaschool.com';
+  var testEmail = 'gauravkalal134@gmail.com';
   var result = sendConfirmationEmail(testEmail, 'Gaurav');
   Logger.log('Test send result: ' + JSON.stringify(result));
 }
