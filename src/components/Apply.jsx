@@ -9,6 +9,19 @@ const API_URL =
 const RAZORPAY_KEY_ID =
   import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_live_TC7SkkDsYqSrdp';
 const APPLICATION_FEE = '₹499';
+const PROGRAM_FEE = '₹19,999';
+
+// Indian mobile: 10 digits starting 6-9, with an optional +91 / 91 / 0 prefix
+const WHATSAPP_RE = /^[6-9]\d{9}$/;
+// Requires a real-looking domain with a TLD, e.g. name@example.com or name@example.co.in
+const EMAIL_RE = /^[^\s@]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i;
+
+function normaliseWhatsapp(value) {
+  const digits = String(value || '').replace(/\D/g, '');
+  if (digits.length === 12 && digits.startsWith('91')) return digits.slice(2);
+  if (digits.length === 11 && digits.startsWith('0')) return digits.slice(1);
+  return digits;
+}
 
 function loadRazorpay() {
   return new Promise((resolve) => {
@@ -86,6 +99,7 @@ export default function Apply({ navigate, isStandalone = false }) {
     whatToCut: '',
     backgroundStory: '',
     whyJoin: '',
+    buildingNow: '',
     howFound: [],
     commitLive: false,
     commitCheckpoint: false
@@ -152,7 +166,6 @@ export default function Apply({ navigate, isStandalone = false }) {
       savePending({ formData: newForm, paymentId });
       return newForm;
     });
-    if (errors.howFound) setErrors(prev => ({ ...prev, howFound: null }));
   };
 
   const triggerShake = useCallback((fieldNames) => {
@@ -172,8 +185,8 @@ export default function Apply({ navigate, isStandalone = false }) {
       if (!formData.name.trim()) newErrors.name = true;
       if (!formData.age.trim()) newErrors.age = true;
       if (!formData.city.trim()) newErrors.city = true;
-      if (!formData.whatsapp.trim()) newErrors.whatsapp = true;
-      if (!formData.email.trim()) newErrors.email = true;
+      if (!WHATSAPP_RE.test(normaliseWhatsapp(formData.whatsapp))) newErrors.whatsapp = true;
+      if (!EMAIL_RE.test(formData.email.trim())) newErrors.email = true;
       if (!formData.whatYouDo.trim()) newErrors.whatYouDo = true;
     } else if (step === 2) {
       if (!formData.soldSomething.trim()) newErrors.soldSomething = true;
@@ -181,7 +194,6 @@ export default function Apply({ navigate, isStandalone = false }) {
       if (!formData.backgroundStory.trim()) newErrors.backgroundStory = true;
       if (!formData.whyJoin.trim()) newErrors.whyJoin = true;
     } else if (step === 3) {
-      if (formData.howFound.length === 0) newErrors.howFound = true;
       if (!formData.commitLive) newErrors.commitLive = true;
       if (!formData.commitCheckpoint) newErrors.commitCheckpoint = true;
     }
@@ -191,10 +203,20 @@ export default function Apply({ navigate, isStandalone = false }) {
     return invalidFields.length === 0;
   };
 
+  const step1Message = () => {
+    if (formData.whatsapp.trim() && !WHATSAPP_RE.test(normaliseWhatsapp(formData.whatsapp))) {
+      return 'Please enter a valid 10-digit WhatsApp number.';
+    }
+    if (formData.email.trim() && !EMAIL_RE.test(formData.email.trim())) {
+      return 'Please enter a valid email address, like name@example.com.';
+    }
+    return 'Please fill out Step 1 first.';
+  };
+
   const validateAll = () => {
     if (!validateStep(1)) {
       goToStep(1);
-      setApiError('Please fill in your Step 1 details.');
+      setApiError(step1Message());
       return false;
     }
     if (!validateStep(2)) {
@@ -217,12 +239,12 @@ export default function Apply({ navigate, isStandalone = false }) {
       if (validateStep(1)) goToStep(2);
       else {
         goToStep(1);
-        setApiError('Please fill out Step 1 first.');
+        setApiError(step1Message());
       }
     } else if (targetStep === 3) {
       if (!validateStep(1)) {
         goToStep(1);
-        setApiError('Please fill out Step 1 first.');
+        setApiError(step1Message());
       } else if (!validateStep(2)) {
         goToStep(2);
         setApiError('Please fill out Step 2 first.');
@@ -241,7 +263,10 @@ export default function Apply({ navigate, isStandalone = false }) {
 
   const handleNext = () => {
     if (validateStep(activeStep)) {
+      setApiError('');
       setActiveStep(prev => prev + 1);
+    } else if (activeStep === 1) {
+      setApiError(step1Message());
     }
   };
 
@@ -265,7 +290,7 @@ export default function Apply({ navigate, isStandalone = false }) {
           full_name: formData.name.trim(),
           age: Number(formData.age),
           email: formData.email.trim(),
-          whatsapp: formData.whatsapp.trim(),
+          whatsapp: normaliseWhatsapp(formData.whatsapp),
           city: formData.city.trim(),
           current_role: formData.whatYouDo.trim(),
           track: formData.trackChoice || 'karkhana',
@@ -273,6 +298,7 @@ export default function Apply({ navigate, isStandalone = false }) {
           time_commitment: formData.whatToCut.trim(),
           background_story: formData.backgroundStory.trim(),
           why_apply: formData.whyJoin.trim(),
+          building_now: (formData.buildingNow || '').trim(),
           how_found: howFoundLabels,
           attend_commit: formData.commitLive,
           checkpoint_commit: formData.commitCheckpoint,
@@ -336,7 +362,7 @@ export default function Apply({ navigate, isStandalone = false }) {
       prefill: {
         name: formData.name.trim(),
         email: formData.email.trim(),
-        contact: formData.whatsapp.trim(),
+        contact: normaliseWhatsapp(formData.whatsapp),
       },
       theme: {
         color: '#1C1B17',
@@ -377,7 +403,7 @@ export default function Apply({ navigate, isStandalone = false }) {
             <span className="apply-highlight-box">Apply for Cohort 2</span>
           </h2>
           <p className="apply-sub">
-            We read every answer personally. About 5 minutes, then a {APPLICATION_FEE} application fee. Honest and specific beats polished and vague.
+            We read every answer personally. Be honest and give your best shot. The application fee is {APPLICATION_FEE} and is nonrefundable.
           </p>
         </div>
 
@@ -508,7 +534,9 @@ export default function Apply({ navigate, isStandalone = false }) {
                           name="whatsapp"
                           value={formData.whatsapp}
                           onChange={handleInputChange}
-                          placeholder="+91 XXXXX XXXXX"
+                          placeholder="10-digit mobile number"
+                          inputMode="numeric"
+                          maxLength={14}
                           className={fieldClass('whatsapp')}
                         />
                       </div>
@@ -602,6 +630,18 @@ export default function Apply({ navigate, isStandalone = false }) {
                             rows={3}
                           />
                         </div>
+
+                        <div className="purple-form-group">
+                          <label htmlFor="buildingNow">Tell us something that you are building right now (it&rsquo;s ok if you aren&rsquo;t) <span className="label-hint">(optional)</span></label>
+                          <textarea
+                            id="buildingNow"
+                            name="buildingNow"
+                            value={formData.buildingNow || ''}
+                            onChange={handleInputChange}
+                            placeholder="A side project, a small business, an idea you're testing..."
+                            rows={3}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -615,9 +655,9 @@ export default function Apply({ navigate, isStandalone = false }) {
                     <div className="step3-body">
                       {/* Left: Multi-select pills */}
                       <div className="step3-left">
-                        <div className={`purple-form-group ${shakingFields.includes('howFound') ? 'shake' : ''}`}>
-                          <label>Where did you hear about Dhandha School? <span className="label-hint">(tick all that apply)</span></label>
-                          <div className={`howfound-pill-grid ${errors.howFound ? 'error-border' : ''}`}>
+                        <div className="purple-form-group">
+                          <label>Where did you hear about Dhandha School? <span className="label-hint">(optional, tick all that apply)</span></label>
+                          <div className="howfound-pill-grid">
                             {HEARD_FROM_OPTIONS.map(opt => (
                               <button
                                 key={opt.value}
@@ -663,12 +703,17 @@ export default function Apply({ navigate, isStandalone = false }) {
                         {/* Fee */}
                         <div className="step3-fee-block">
                           <div className="step3-fee-left">
-                            <p className="step3-section-label">Program Fee</p>
-                            <div className="step3-fee-amount">
-                              <span className="step3-fee-crossed">₹19,999</span>
-                              <span className="step-highlight-box fee-amount-badge">{APPLICATION_FEE}</span>
+                            <div className="step3-fee-pair">
+                              <div className="step3-fee-item">
+                                <p className="step3-section-label">Program Fee</p>
+                                <span className="step3-fee-value">{PROGRAM_FEE}</span>
+                              </div>
+                              <div className="step3-fee-item step3-fee-item--due">
+                                <p className="step3-section-label">Application Fee</p>
+                                <span className="step3-fee-value">{APPLICATION_FEE}</span>
+                              </div>
                             </div>
-                            <p className="step3-fee-note">Scholarships will be extended based on the merit in your application. You only pay the {APPLICATION_FEE} application fee right now.</p>
+                            <p className="step3-fee-note">You only pay the {APPLICATION_FEE} application fee right now. It is nonrefundable. Scholarships on the program fee will be extended based on the merit in your application.</p>
                           </div>
                         </div>
                       </div>

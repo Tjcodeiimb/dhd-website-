@@ -60,6 +60,13 @@ const VALID_HOW_FOUND = [
   'College / University', 'Google Search', 'Podcast', 'Other',
 ];
 
+function normaliseWhatsapp(value) {
+  const digits = String(value || '').replace(/\D/g, '');
+  if (digits.length === 12 && digits.startsWith('91')) return digits.slice(2);
+  if (digits.length === 11 && digits.startsWith('0')) return digits.slice(1);
+  return digits;
+}
+
 function validate(body) {
   const errors = [];
 
@@ -71,9 +78,11 @@ function validate(body) {
     if (isNaN(a) || a < 13 || a > 60) errors.push('age must be between 13 and 60');
   }
   if (!body.email?.trim())        errors.push('email is required');
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email))
+  else if (!/^[^\s@]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i.test(body.email.trim()))
                                   errors.push('email is invalid');
   if (!body.whatsapp?.trim())     errors.push('whatsapp is required');
+  else if (!/^[6-9]\d{9}$/.test(normaliseWhatsapp(body.whatsapp)))
+                                  errors.push('whatsapp must be a 10-digit mobile number');
   if (!body.city?.trim())         errors.push('city is required');
   if (!body.current_role?.trim()) errors.push('current_role is required');
 
@@ -86,9 +95,9 @@ function validate(body) {
   if (!body.background_story?.trim())  errors.push('background_story is required');
   if (!body.why_apply?.trim())         errors.push('why_apply is required');
 
-  // Step 3
-  if (!body.how_found || !Array.isArray(body.how_found) || body.how_found.length === 0)
-                                  errors.push('how_found must have at least one selection');
+  // Step 3 (how_found is optional)
+  if (body.how_found !== undefined && !Array.isArray(body.how_found))
+                                  errors.push('how_found must be an array');
   if (!body.attend_commit)        errors.push('attend_commit must be accepted');
   if (!body.checkpoint_commit)    errors.push('checkpoint_commit must be accepted');
 
@@ -142,7 +151,7 @@ export default {
         full_name:        String(body.full_name).trim(),
         age:              Number(body.age),
         email:            String(body.email).trim().toLowerCase(),
-        whatsapp:         String(body.whatsapp).trim(),
+        whatsapp:         normaliseWhatsapp(body.whatsapp),
         city:             String(body.city).trim(),
         current_role:     String(body.current_role).trim(),
         // Step 2
@@ -151,8 +160,9 @@ export default {
         time_commitment:  String(body.time_commitment).trim(),
         background_story: String(body.background_story).trim(),
         why_apply:        String(body.why_apply).trim(),
+        building_now:     body.building_now ? String(body.building_now).trim() : '',   // optional
         // Step 3
-        how_found:        body.how_found,          // array — stored as JSON in D1
+        how_found:        Array.isArray(body.how_found) ? body.how_found : [],  // optional; stored as JSON in D1
         attend_commit:    Boolean(body.attend_commit),
         checkpoint_commit: Boolean(body.checkpoint_commit),
         // Payment

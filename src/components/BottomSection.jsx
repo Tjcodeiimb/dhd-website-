@@ -22,7 +22,7 @@ export default function BottomSection({ navigate }) {
             <span className="bottom-tag">FAQ</span>
           </div>
           <h2 className="bottom-faq-title">
-            The <span className="faq-highlight-box yellow-highlight">honest answers</span> to the <span className="faq-highlight-box blue-highlight">obvious questions.</span>
+            The <span className="faq-highlight-box yellow-highlight">honest answers</span> to the <span className="faq-highlight-box blue-highlight">obvious questions</span>
           </h2>
           
           <div className="bottom-faq-list">
@@ -73,7 +73,7 @@ export default function BottomSection({ navigate }) {
       <section className="cta-section">
         <div className="cta-main-box">
           <h2 className="bottom-cta-title">
-            Stop preparing. Start <span className="cta-highlight-box yellow-highlight">building.</span>
+            Stop preparing. Start <span className="cta-highlight-box yellow-highlight">building</span>
           </h2>
           <p className="bottom-cta-sub">
             Applications are open for Cohort 2. Cohort 2 will tentatively start end of October, and you will hear back from us within 72 hours of applying.

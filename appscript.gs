@@ -51,6 +51,7 @@ function doPost(e) {
       'Payment ID',
       'Status',
       'Email Sent',
+      'Building Now',
     ];
 
     // Auto-create sheet + header row on first run
@@ -82,6 +83,10 @@ function doPost(e) {
         var updatedHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
         if (updatedHeaders.indexOf('Email Sent') === -1) {
           sheet.getRange(1, sheet.getLastColumn() + 1).setValue('Email Sent');
+        }
+        updatedHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+        if (updatedHeaders.indexOf('Building Now') === -1) {
+          sheet.getRange(1, sheet.getLastColumn() + 1).setValue('Building Now');
         }
       }
     }
@@ -133,6 +138,7 @@ function doPost(e) {
       data.payment_id        || '',
       statusVal,
       emailStatus,
+      data.building_now      || '',
     ]);
 
     return jsonOut({
@@ -283,7 +289,7 @@ function escapeHtml_(value) {
  * and verify that emails arrive in your inbox.
  */
 function sendTestEmail() {
-  var testEmail = 'gauravkalal134@gmail.com';
+  var testEmail = 'founder@dhandhaschool.com';
   var result = sendConfirmationEmail(testEmail, 'Gaurav');
   Logger.log('Test send result: ' + JSON.stringify(result));
 }

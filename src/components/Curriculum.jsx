@@ -51,7 +51,7 @@ export default function Curriculum() {
           {/* Left Column: Heading and copy */}
           <div className="curriculum-left">
             <h2 className="curriculum-title">
-              The classroom: <span className="curriculum-highlight-box yellow-highlight">10 live sessions.</span>
+              The classroom: <span className="curriculum-highlight-box yellow-highlight">10 live sessions</span>
             </h2>
             <p className="curriculum-text-box">
               Every session is live, taught with Indian case studies and dhandha you can use the same week.

@@ -231,8 +231,8 @@ export default function NewHero({ navigate, isDesktopViewport }) {
         <div className="new-hero-content">
           <h1 className="new-hero-title">
             INDIA DOESN&rsquo;T HAVE AN <br />
-            EDUCATION SYSTEM. <br />
-            <span className="exam-highlight-box mobile-block-highlight">IT HAS AN EXAM SYSTEM.</span>
+            EDUCATION SYSTEM <br />
+            <span className="exam-highlight-box mobile-block-highlight">IT HAS AN EXAM SYSTEM</span>
           </h1>
           <p className="new-hero-subtitle">
             You&rsquo;ve been its customer since you were 16.

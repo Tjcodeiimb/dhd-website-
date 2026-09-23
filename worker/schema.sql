@@ -20,9 +20,10 @@ CREATE TABLE IF NOT EXISTS applications (
   time_commitment    TEXT    NOT NULL,
   background_story   TEXT    NOT NULL,
   why_apply          TEXT    NOT NULL,
+  building_now       TEXT    NOT NULL DEFAULT '', -- optional
 
   -- Step 3 · The handshake
-  how_found          TEXT    NOT NULL,           -- JSON array e.g. '["Instagram","YouTube"]'
+  how_found          TEXT    NOT NULL,           -- JSON array e.g. '["Instagram","YouTube"]', '[]' if not shared
   attend_commit      INTEGER NOT NULL DEFAULT 0 CHECK (attend_commit IN (0, 1)),
   checkpoint_commit  INTEGER NOT NULL DEFAULT 0 CHECK (checkpoint_commit IN (0, 1)),
 

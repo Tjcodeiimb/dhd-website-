@@ -9,11 +9,11 @@ export default function Offer({ navigate }) {
           <div className="offer-left">
             <div className="offer-header">
               <h2 className="offer-title">
-                We help you become an <span className="offer-highlight-box blue-highlight">entrepreneur</span>.
+                We help you become an <span className="offer-highlight-box blue-highlight">entrepreneur</span>
                 <br />
                 By making you
                 <br />
-                <span className="offer-highlight-box green-highlight">build</span>, not study.
+                <span className="offer-highlight-box green-highlight">build</span>, not study
               </h2>
               <div className="offer-subheading-box">
                 What you actually get inside the cohort.

@@ -44,7 +44,7 @@ export default function InvestorDay() {
           <div className="investor-left">
             <div className="investor-subheading-box">THE FINALE</div>
             <h2 className="investor-title">
-              <span className="investor-highlight-box yellow-highlight">One team</span> flies to <span className="investor-highlight-box pink-highlight">Bangalore.</span>
+              <span className="investor-highlight-box yellow-highlight">One team</span> flies to <span className="investor-highlight-box pink-highlight">Bangalore</span>
             </h2>
             <p className="investor-desc">
               After the Week 4 demos, we pick one team. Flights, stay, everything paid. You spend a day inside the startup ecosystem: sit with 4 to 5 founders, pitch your business to real VCs, and see the rooms most people only read about.

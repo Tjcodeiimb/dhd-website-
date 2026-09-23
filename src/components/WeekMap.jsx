@@ -8,7 +8,7 @@ export default function WeekMap() {
         {/* Header */}
         <div className="weekmap-header">
           <h2 className="weekmap-title">
-            <span className="wm-highlight-box yellow-highlight">FOUR WEEKS.</span> THIS IS THE <span className="wm-highlight-box blue-highlight">MAP.</span>
+            <span className="wm-highlight-box yellow-highlight">FOUR WEEKS</span> THIS IS THE <span className="wm-highlight-box blue-highlight">MAP</span>
           </h2>
           <div className="weekmap-subtitle-box">
             Sessions run down the centre. Your track's checkpoint flanks left or right.

@@ -7,22 +7,22 @@ export default function Beliefs({ navigate }) {
   const data = [
     {
       num: '01',
-      title: 'Wealth comes from ownership.',
+      title: 'Wealth comes from ownership',
       text: "Nobody gets truly rich on a salary. Look at any rich list: it's people who built and owned businesses. A job pays your bills. Ownership buys your freedom."
     },
     {
       num: '02',
-      title: 'There is no right age.',
+      title: 'There is no right age',
       text: "16 or 45, the market doesn't check your birth certificate. It checks whether someone will pay for what you made. You can start today."
     },
     {
       num: '03',
-      title: "You don't need a degree. You need the basics.",
+      title: "You don't need a degree. You need the basics",
       text: "Marketing, strategy, finance, relevant tech tools: enough to get moving. That takes weeks, not years. The rest you learn on the business, while running it."
     },
     {
       num: '04',
-      title: 'Your network is the moat.',
+      title: 'Your network is the moat',
       text: "Dhandhas are built on meaningful relationships: customers who trust you, founders who've seen your problem, one senior who picks up your call. AI can write your ads. It cannot build your relationships."
     }
   ];
@@ -67,7 +67,7 @@ export default function Beliefs({ navigate }) {
 
         <div className="beliefs-header">
           <h2 className="beliefs-title">
-            <span className="beliefs-highlight-box">FOUR THINGS</span> WE HOLD TO BE TRUE.
+            <span className="beliefs-highlight-box">FOUR THINGS</span> WE HOLD TO BE TRUE
           </h2>
           <div className="beliefs-subheading-box">
             The principles that drive Dhandha School.

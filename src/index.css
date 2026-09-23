@@ -3385,7 +3385,7 @@ h3,
   font-weight: 500;
   color: #2A2A2A;
   max-width: 600px;
-  margin: 0 auto;
+  margin: 1.25rem auto 0;
   line-height: 1.5;
 }
 
@@ -3720,11 +3720,37 @@ h3,
   flex-wrap: wrap;
 }
 
-.step3-fee-crossed {
-  text-decoration: line-through;
-  color: #888;
-  font-size: 2.4rem;
-  font-weight: 800;
+.step3-fee-pair {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.step3-fee-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0.6rem 0.8rem;
+  border: 2px solid #1C1B17;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.step3-fee-item .step3-section-label {
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.step3-fee-item--due {
+  background: #FDE68A;
+}
+
+.step3-fee-value {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900;
+  font-size: 1.6rem;
+  line-height: 1.1;
+  color: #1C1B17;
 }
 
 .step3-fee-note {
@@ -5956,4 +5982,29 @@ h3,
   border: 2.5px solid #1C1B17 !important;
   box-shadow: 4px 4px 0px #1C1B17 !important;
   transform: rotate(-1deg) scale(1.02);
+}
+/* ==========================================
+   Section label: FAQ tag in the black highlight style used by the other sections
+   ========================================== */
+.bottom-tag,
+.faq-section .bottom-tag {
+  background: #1C1B17 !important;
+  color: #FAF8F2 !important;
+  border: 2px solid #1C1B17 !important;
+  border-radius: 0 !important;
+  padding: 0.35rem 1rem !important;
+  transform: rotate(-1deg);
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================
+   Every "Apply for Cohort 2" CTA uses Poppins
+   ========================================== */
+.new-hero-actions .btn-primary,
+.mobile-apply-black-btn,
+.offer-cta-button,
+.readthis-cta-box,
+.bottom-cta-btn,
+.purple-btn.submit-btn {
+  font-family: 'Poppins', sans-serif !important;
 }

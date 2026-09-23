@@ -73,7 +73,7 @@ export default function Tracks() {
     <div className="tracks-section" id="tracks">
       <div className="tracks-container">
         <h2 className="tracks-title">
-          One school. <span className="tracks-highlight-box yellow-highlight">Two tracks.</span> Pick yours.
+          One school <span className="tracks-highlight-box yellow-highlight">Two tracks</span> Pick yours
         </h2>
         <svg className="fork-svg" width="560" height="90" viewBox="0 0 560 90" aria-hidden="true">
           <defs>
