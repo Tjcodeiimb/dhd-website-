@@ -6,8 +6,11 @@ const API_URL =
     ? 'https://dhandha-api.gauravkalal134.workers.dev/api/apply'
     : '/api/apply';
 
+// Regenerating the Razorpay key on 24 Sep 2026 issued a new id as well as a new secret, and the
+// old pair stops working 24 hours later. The fallback has to carry the new id: if the deploy
+// environment doesn't set VITE_RAZORPAY_KEY_ID, this constant is what opens checkout.
 const RAZORPAY_KEY_ID =
-  import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_live_TC7SkkDsYqSrdp';
+  import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_live_TfqBTAzD9QwnXd';
 const APPLICATION_FEE = '₹499';
 const PROGRAM_FEE = '₹19,999';
 
