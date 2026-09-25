@@ -237,45 +237,87 @@ function sendConfirmationEmail(toEmail, fullName) {
 }
 
 function applicationReceivedHtml(name) {
-  return emailWrapper(`
-    <p style="margin:0 0 16px;">Hi ${name},</p>
-
-    <p style="margin:0 0 16px;">
-      Thanks for applying to Dhandha School. We've received your application.
-    </p>
-
-    <p style="margin:0 0 16px;">
-      We're going through every application carefully. There's a lot of thought that goes into putting together a cohort, and we want to make sure we get it right.
-    </p>
-
-    <p style="margin:0 0 16px;">
-      You'll hear from us once we've reviewed your application. In the meantime, there's nothing more you need to do.
-    </p>
-
-    <p style="margin:0 0 24px;">
-      We're glad you're interested in building with us.
-    </p>
-
-    <p style="margin:0;">See you soon.</p>
-  `);
+  var inner =
+    heading_("WE'VE GOT IT.", 'SIT TIGHT.') +
+    script_('we read every single one.') +
+    '<p style="margin:22px 0 16px;">Hi ' + name + ',</p>' +
+    '<p style="margin:0 0 16px;">Thanks for applying to Dhandha School. Your application is in, and your fee has been received.</p>' +
+    '<p style="margin:0 0 16px;">We read every application ourselves. There is a lot of thought that goes into putting a cohort together, and we would rather take the time than get it wrong.</p>' +
+    '<p style="margin:0 0 16px;">You will hear from us <strong>within 72 hours</strong>. There is nothing more you need to do until then.</p>' +
+    '<p style="margin:0;">We are glad you want to build with us.</p>';
+  return emailWrapper(inner, pill_('Application received'));
 }
 
-function emailWrapper(bodyHtml) {
-  return `
-<div style="background-color:#f4f2ee; padding:32px 16px; font-family:Georgia,'Times New Roman',serif;">
-  <div style="max-width:560px; margin:0 auto; background:#ffffff; border-radius:8px; overflow:hidden; border:1px solid #e6e2da;">
-    <div style="background:#1a1a1a; padding:20px 32px;">
-      <span style="color:#ffffff; font-size:18px; letter-spacing:1px;">Dhandha School</span>
-    </div>
-    <div style="padding:32px; font-size:16px; line-height:1.7; color:#1a1a1a;">
-      ${bodyHtml}
-    </div>
-    <div style="padding:16px 32px 24px; border-top:1px solid #eeeae2;">
-      <span style="font-size:13px; color:#8a857c;">Team Dhandha School · <a href="mailto:founder@dhandhaschool.com" style="color:#8a857c; text-decoration:none;">founder@dhandhaschool.com</a></span>
-    </div>
-  </div>
-</div>`;
+// ============ BRAND SHELL ============
+// Tables with inline styles, not divs: Gmail strips <style> blocks and Outlook applies its own box
+// model, and this layout leans on an offset "hard shadow" that box-shadow cannot provide in email.
+// Matches the acceptance and decision emails sent from the portal — same shell, same fonts, same
+// footer — so every message from Dhandha School looks like it came from the same place.
+
+var INK_ = '#0d0d0d';
+var PAPER_ = '#f6f4ee';
+var OUTER_ = '#e8e4db';
+var YELLOW_ = '#fad06b';
+var MINT_ = '#cdebd8';
+var MUTED_ = '#6f6a61';
+var DISPLAY_ = "Helvetica Neue,Helvetica,Arial,sans-serif";
+var MONO_ = "'SF Mono',Menlo,Consolas,'Courier New',monospace";
+var SCRIPT_ = "'Segoe Script','Bradley Hand','Apple Chancery',cursive";
+var LOGO_URL_ = 'https://www.portal.dhandhaschool.com/logo-ink.png';
+
+function pill_(text) {
+  return '<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>' +
+    '<td style="background:' + MINT_ + ';border:2px solid ' + INK_ + ';border-radius:999px;padding:6px 14px;' +
+    'font-family:' + MONO_ + ';font-size:10.5px;font-weight:700;letter-spacing:.1em;color:' + INK_ + ';">' + text + '</td>' +
+    '</tr></table>';
 }
+
+function heading_(lineOne, lineTwo) {
+  return '<h1 style="margin:0 0 6px;font-family:' + DISPLAY_ + ';font-size:40px;line-height:1.02;font-weight:800;' +
+    'letter-spacing:-.02em;color:' + INK_ + ';">' + lineOne + '<br>' +
+    '<span style="display:inline-block;background:' + YELLOW_ + ';padding:2px 8px;margin-top:6px;">' + lineTwo + '</span></h1>';
+}
+
+function script_(text) {
+  return '<p style="margin:10px 0 0;font-family:' + SCRIPT_ + ';font-style:italic;font-size:17px;color:#d08a2c;">' + text + '</p>';
+}
+
+function emailWrapper(bodyHtml, badge) {
+  badge = badge || '';
+  return '' +
+  '<div style="background:' + OUTER_ + ';padding:28px 14px;">' +
+    '<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="width:100%;max-width:600px;margin:0 auto;">' +
+      '<tr><td style="padding:0 4px 4px 0;">' +
+        '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:' + INK_ + ';">' +
+          '<tr><td style="padding:0 4px 4px 0;">' +
+            '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:' + PAPER_ + ';border:2px solid ' + INK_ + ';">' +
+              '<tr><td style="padding:24px 28px 0;">' +
+                '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>' +
+                  '<td align="left" valign="middle">' + badge + '</td>' +
+                  '<td align="right" valign="middle" style="width:140px;">' +
+                    '<img src="' + LOGO_URL_ + '" width="140" height="35" alt="Dhandha School" ' +
+                    'style="display:block;border:0;outline:none;text-decoration:none;width:140px;height:auto;max-width:140px;">' +
+                  '</td>' +
+                '</tr></table>' +
+              '</td></tr>' +
+              '<tr><td style="padding:20px 28px 26px;font-family:' + DISPLAY_ + ';font-size:15px;line-height:1.65;color:' + INK_ + ';">' +
+                bodyHtml +
+              '</td></tr>' +
+            '</table>' +
+          '</td></tr>' +
+        '</table>' +
+      '</td></tr>' +
+      '<tr><td style="padding:16px 4px 0;font-family:' + DISPLAY_ + ';font-size:13px;color:' + MUTED_ + ';">' +
+        'Questions? Reply to this mail. A human reads it.' +
+        '<div style="margin-top:14px;font-family:' + MONO_ + ';font-size:11px;letter-spacing:.09em;color:' + MUTED_ + ';">' +
+          'DHANDHA SCHOOL &middot; BANGALORE &middot; EST. 2026' +
+          '<div style="margin-top:4px;"><a href="https://dhandhaschool.com" style="color:' + MUTED_ + ';">dhandhaschool.com</a></div>' +
+        '</div>' +
+      '</td></tr>' +
+    '</table>' +
+  '</div>';
+}
+
 
 function escapeHtml_(value) {
   return String(value)
