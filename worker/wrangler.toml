@@ -1,0 +1,21 @@
+name = "dhandha-api"
+main = "src/index.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# ─── D1 Database ────────────────────────────────────────────────────────────
+# Step 1: Run → wrangler d1 create dhandha-db
+# Step 2: Copy the database_id from output and paste below
+[[d1_databases]]
+binding       = "DB"
+database_name = "dhandha-db"
+database_id   = "3b9514a0-ed70-4a31-82e6-578bea482278"
+
+# ─── Environment Variables ───────────────────────────────────────────────────
+# The live site origin — allows your frontend to call this worker
+[vars]
+ALLOWED_ORIGIN = "*"
+
+# ─── Secrets (set via CLI, never in this file) ───────────────────────────────
+# wrangler secret put SHEETS_WEBHOOK_URL
+# (paste the Google Apps Script Web App URL when prompted)

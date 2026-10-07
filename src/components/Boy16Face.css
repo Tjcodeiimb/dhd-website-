@@ -1,0 +1,148 @@
+.boy16-wrapper {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.boy16-hair {
+  position: absolute;
+  width: 130px;
+  height: 120px;
+  background-color: #4A2818;
+  border-radius: 65px 65px 40px 40px;
+  top: 15px;
+  z-index: 1;
+}
+
+/* Fringes for a messy teenage haircut */
+.boy16-fringe1 {
+  position: absolute;
+  width: 45px;
+  height: 35px;
+  background-color: #4A2818;
+  border-radius: 20px;
+  top: 25px;
+  left: -10px;
+  transform: rotate(-25deg);
+}
+.boy16-fringe2 {
+  position: absolute;
+  width: 55px;
+  height: 40px;
+  background-color: #4A2818;
+  border-radius: 25px;
+  top: -5px;
+  left: 20px;
+}
+.boy16-fringe3 {
+  position: absolute;
+  width: 60px;
+  height: 45px;
+  background-color: #4A2818;
+  border-radius: 30px;
+  top: -10px;
+  right: 20px;
+}
+.boy16-fringe4 {
+  position: absolute;
+  width: 45px;
+  height: 35px;
+  background-color: #4A2818;
+  border-radius: 20px;
+  top: 20px;
+  right: -10px;
+  transform: rotate(25deg);
+}
+
+.boy16-ear-left, .boy16-ear-right {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background-color: #FFD8A8;
+  border-radius: 50%;
+  top: 65px;
+  z-index: 2;
+}
+.boy16-ear-left { left: 5px; }
+.boy16-ear-right { right: 5px; }
+
+.boy16-face {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background-color: #FFD8A8;
+  border-radius: 50%;
+  z-index: 3;
+}
+
+.boy16-eyebrow-left, .boy16-eyebrow-right {
+  position: absolute;
+  width: 25px;
+  height: 8px;
+  background-color: #4A2818;
+  border-radius: 4px;
+  top: 28px;
+}
+.boy16-eyebrow-left {
+  left: 22px;
+  transform: rotate(8deg);
+}
+.boy16-eyebrow-right {
+  right: 22px;
+  transform: rotate(-8deg);
+}
+
+.boy16-eye-left, .boy16-eye-right {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  top: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.boy16-eye-left { left: 24px; }
+.boy16-eye-right { right: 24px; }
+
+.boy16-pupil {
+  width: 10px;
+  height: 10px;
+  background-color: #4A2818;
+  border-radius: 50%;
+  position: relative;
+}
+
+.boy16-highlight {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  top: 1px;
+  right: 1px;
+}
+
+.boy16-nose {
+  position: absolute;
+  width: 8px;
+  height: 18px;
+  background-color: #E6BB8A;
+  border-radius: 4px;
+  top: 55px;
+  left: 56px;
+}
+
+.boy16-mouth {
+  position: absolute;
+  width: 30px;
+  height: 15px;
+  border-bottom: 3px solid #4A2818;
+  border-radius: 0 0 15px 15px;
+  top: 80px;
+  left: 45px;
+}

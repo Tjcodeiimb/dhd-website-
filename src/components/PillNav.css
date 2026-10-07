@@ -1,0 +1,336 @@
+.pill-nav-container {
+  position: fixed;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 1.5rem;
+}
+
+.pill-nav-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .pill-nav-container {
+    width: 100%;
+    left: 0;
+    top: 0;
+    transform: none;
+    padding: 0;
+  }
+  .pill-nav-wrapper {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.65rem 1rem;
+    box-sizing: border-box;
+    gap: 0.5rem;
+    background-color: #FAF8F2; /* Solid background so scrolling content doesn't show through */
+    border-bottom: 1.5px solid #E5E0D5; /* Optional separator */
+  }
+}
+
+/* ==========================================
+   Navigation Header Logo (Compact Variant A)
+   ========================================== */
+.nav-logo-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 0.5rem 0 0;
+  box-sizing: border-box;
+  background: transparent;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: visible !important;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.nav-brand-img {
+  height: 32px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.nav-logo-container:hover .nav-brand-img {
+  transform: scale(1.03);
+}
+
+/* ==========================================
+   Pill Nav Styling
+   ========================================== */
+.pill-nav {
+  --nav-h: 2.85rem;
+  --pill-pad-x: 1.25rem;
+  --pill-pad-y: 0.35rem;
+  --pill-gap: 0.6rem;
+  width: max-content;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .pill-nav {
+    width: auto;
+  }
+}
+
+.pill-nav-items {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--nav-h);
+  background: transparent;
+}
+
+.pill-list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--pill-gap);
+  margin: 0;
+  padding: 0 3px 3px 0; /* room for the offset shadow */
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.pill-list > li {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(var(--nav-h) - 0.5rem);
+  padding: 0 var(--pill-pad-x);
+  background: var(--pill-bg, #fff);
+  color: var(--pill-text, var(--base, #000));
+  text-decoration: none;
+  /* Same box as the FAQ rows and form buttons: ink border + hard offset shadow */
+  border: 2px solid var(--base, #1C1B17);
+  box-shadow: 3px 3px 0px var(--base, #1C1B17);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border-radius: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02rem;
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.pill:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--base, #1C1B17);
+}
+
+.pill .hover-circle {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  border-radius: 50%;
+  background: #2A75D3;
+  z-index: 1;
+  display: block;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.pill .label-stack {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  z-index: 2;
+}
+
+.pill .pill-label {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  line-height: 1;
+  will-change: transform;
+}
+
+.pill .pill-label-hover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--hover-text, #fff);
+  z-index: 3;
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.pill.is-active::after {
+  content: '';
+  position: absolute;
+  bottom: 0.12rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.25rem;
+  height: 0.25rem;
+  background: var(--base, #000);
+  border-radius: 50%;
+  z-index: 4;
+}
+
+.desktop-only {
+  display: flex;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+  .mobile-only {
+    display: flex;
+  }
+}
+
+.mobile-menu-button {
+  width: var(--nav-h);
+  height: var(--nav-h);
+  border-radius: 0;
+  background: var(--base, #000);
+  border: none;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-button {
+    display: flex;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 4px;
+    width: auto;
+    height: auto;
+    flex-shrink: 0;
+  }
+
+  .mobile-top-apply-btn {
+    border: 2px solid #1C1B17;
+    background: #FAF8F2;
+    color: #1C1B17;
+    font-family: 'Poppins', 'Satoshi', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .mobile-top-apply-btn:active {
+    transform: scale(0.96);
+  }
+
+  .nav-brand-img {
+    height: 26px;
+    width: auto;
+  }
+}
+
+.hamburger-line {
+  width: 1.25rem;
+  height: 0.15rem;
+  background: #1C1B17;
+  border-radius: 0.06rem;
+  transition: all 0.2s ease;
+  transform-origin: center;
+}
+
+.mobile-menu-popover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #FAF8F2;
+  border-top: 2px solid #1C1B17;
+  border-bottom: 2px solid #1C1B17;
+  z-index: 1001;
+  opacity: 0;
+  transform-origin: top center;
+  visibility: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  max-height: calc(100vh - 60px); /* keep menu options scrollable */
+  overflow-y: auto;
+}
+
+.mobile-menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-menu-list li {
+  border-bottom: 1.5px solid #E5E0D5;
+}
+
+.mobile-menu-list li:last-child {
+  border-bottom: none;
+}
+
+.mobile-menu-popover .mobile-menu-link {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem 1.5rem;
+  color: #1C1B17;
+  background-color: #FAF8F2;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.mobile-menu-popover .mobile-menu-link:hover,
+.mobile-menu-popover .mobile-menu-link:active {
+  background-color: #1C1B17;
+  color: #FAF8F2;
+}
+
+.mobile-menu-popover .mobile-menu-link.is-active {
+  color: #d97706;
+  border-left: 4px solid #d97706;
+  padding-left: calc(1.5rem - 4px);
+}

@@ -1,0 +1,226 @@
+.boy-face-wrapper {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.boy-face-hair {
+  position: absolute;
+  width: 130px;
+  height: 120px;
+  background-color: #4A2818;
+  border-radius: 65px 65px 40px 40px;
+  top: 15px;
+  z-index: 1;
+}
+
+/* Fringes for a messy teenage haircut */
+.boy-face-fringe1 {
+  position: absolute;
+  width: 45px;
+  height: 35px;
+  background-color: #4A2818;
+  border-radius: 20px;
+  top: 25px;
+  left: -10px;
+  transform: rotate(-25deg);
+}
+.boy-face-fringe2 {
+  position: absolute;
+  width: 55px;
+  height: 40px;
+  background-color: #4A2818;
+  border-radius: 25px;
+  top: -5px;
+  left: 20px;
+}
+.boy-face-fringe3 {
+  position: absolute;
+  width: 60px;
+  height: 45px;
+  background-color: #4A2818;
+  border-radius: 30px;
+  top: -10px;
+  right: 20px;
+}
+.boy-face-fringe4 {
+  position: absolute;
+  width: 45px;
+  height: 35px;
+  background-color: #4A2818;
+  border-radius: 20px;
+  top: 20px;
+  right: -10px;
+  transform: rotate(25deg);
+}
+
+.boy-face-ear-left, .boy-face-ear-right {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background-color: #FFD8A8;
+  border-radius: 50%;
+  top: 65px;
+  z-index: 2;
+}
+.boy-face-ear-left { left: 5px; }
+.boy-face-ear-right { right: 5px; }
+
+.boy-face-main {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background-color: #FFD8A8;
+  border-radius: 50%;
+  z-index: 3;
+}
+
+.boy-face-eyebrow-left, .boy-face-eyebrow-right {
+  position: absolute;
+  width: 25px;
+  height: 8px;
+  background-color: #4A2818;
+  border-radius: 4px;
+  top: 28px;
+}
+.boy-face-eyebrow-left {
+  left: 22px;
+  transform: rotate(8deg);
+}
+.boy-face-eyebrow-right {
+  right: 22px;
+  transform: rotate(-8deg);
+}
+
+.boy-face-eye-left, .boy-face-eye-right {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  top: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.boy-face-eye-left { left: 24px; }
+.boy-face-eye-right { right: 24px; }
+
+.boy-face-pupil {
+  width: 10px;
+  height: 10px;
+  background-color: #4A2818;
+  border-radius: 50%;
+  position: relative;
+}
+
+.boy-face-highlight {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  top: 1px;
+  right: 1px;
+}
+
+.boy-face-nose {
+  position: absolute;
+  width: 8px;
+  height: 18px;
+  background-color: #E6BB8A;
+  border-radius: 4px;
+  top: 55px;
+  left: 56px;
+}
+
+.boy-face-mouth {
+  position: absolute;
+  border-radius: 0 0 15px 15px;
+}
+
+.boy-face-mouth-smile {
+  width: 30px;
+  height: 15px;
+  border-bottom: 3px solid #4A2818;
+  border-radius: 0 0 15px 15px;
+  top: 80px;
+  left: 45px;
+}
+
+.boy-face-mouth-straight {
+  width: 24px;
+  height: 3px;
+  background-color: #4A2818;
+  border-radius: 2px;
+  top: 86px;
+  left: 48px;
+}
+
+.boy-face-mouth-sad {
+  width: 26px;
+  height: 10px;
+  border-top: 3px solid #4A2818;
+  border-radius: 15px 15px 0 0;
+  top: 88px;
+  left: 47px;
+}
+
+.boy-face-glasses {
+  position: absolute;
+  top: 38px;
+  left: 10px;
+  width: 100px;
+  height: 36px;
+  z-index: 4;
+}
+
+.boy-face-glass-left, .boy-face-glass-right {
+  position: absolute;
+  width: 38px;
+  height: 30px;
+  border: 3.5px solid #1C1B17;
+  border-radius: 10px;
+}
+.boy-face-glass-left {
+  left: 4px;
+}
+.boy-face-glass-right {
+  right: 4px;
+}
+.boy-face-glass-bridge {
+  position: absolute;
+  width: 16px;
+  height: 3.5px;
+  background-color: #1C1B17;
+  top: 14px;
+  left: 42px;
+}
+
+.boy-face-beard {
+  position: absolute;
+  bottom: 4px;
+  left: 30px;
+  width: 60px;
+  height: 30px;
+}
+
+.stubble {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background-color: #4A2818;
+  opacity: 0.65;
+  border-radius: 50%;
+}
+.s1 { top: 12px; left: 10px; transform: rotate(15deg); }
+.s2 { top: 22px; left: 25px; transform: rotate(5deg); }
+.s3 { top: 18px; left: 40px; transform: rotate(-10deg); }
+.s4 { top: 8px; left: 52px; transform: rotate(-20deg); }
+.s5 { top: 5px; left: 16px; transform: rotate(8deg); }
+.s6 { top: 15px; left: 5px; transform: rotate(25deg); }
+.s7 { top: 24px; left: 35px; transform: rotate(-5deg); }
+.s8 { top: 12px; left: 48px; transform: rotate(-25deg); }
