@@ -1,0 +1,505 @@
+<title>Dhandha School</title>
+<style>
+  :root {
+    --paper: #F6F4EE;
+    --surface: #EFECE3;
+    --ink: #1C1B17;
+    --ink-soft: #55524A;
+    --line: #C9C4B6;
+    --money: #0E7A4A;
+    --money-ink: #F6F4EE;
+    --pencil: #5B7A99;
+    --pencil-bg: #5B7A9918;
+    --dark-block: #1C1B17;
+    --dark-block-ink: #F6F4EE;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #171613;
+      --surface: #201F1A;
+      --ink: #ECE9DF;
+      --ink-soft: #A8A396;
+      --line: #3B382F;
+      --money: #3FA574;
+      --money-ink: #10130F;
+      --pencil: #7E9CBB;
+      --pencil-bg: #7E9CBB1f;
+      --dark-block: #24231D;
+      --dark-block-ink: #ECE9DF;
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #F6F4EE; --surface: #EFECE3; --ink: #1C1B17; --ink-soft: #55524A;
+    --line: #C9C4B6; --money: #0E7A4A; --money-ink: #F6F4EE;
+    --pencil: #5B7A99; --pencil-bg: #5B7A9918;
+    --dark-block: #1C1B17; --dark-block-ink: #F6F4EE;
+  }
+  :root[data-theme="dark"] {
+    --paper: #171613; --surface: #201F1A; --ink: #ECE9DF; --ink-soft: #A8A396;
+    --line: #3B382F; --money: #3FA574; --money-ink: #10130F;
+    --pencil: #7E9CBB; --pencil-bg: #7E9CBB1f;
+    --dark-block: #24231D; --dark-block-ink: #ECE9DF;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Charter, Georgia, "Times New Roman", serif;
+    line-height: 1.55;
+    margin: 0;
+  }
+  .sheet { max-width: 880px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  h1, h2, h3, .display {
+    font-family: "Avenir Next Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: 0.1px;
+    text-wrap: balance;
+    margin: 0;
+  }
+  .mono, .chip, .tag, .note, .stat {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* sheet header */
+  .sheet-head { border-bottom: 2px solid var(--ink); padding-bottom: 18px; margin-bottom: 34px; }
+  .sheet-head .mono { font-size: 12px; color: var(--ink-soft); letter-spacing: 1px; text-transform: uppercase; }
+  .sheet-head h1 { font-size: clamp(30px, 5vw, 44px); margin-top: 8px; }
+  .sheet-head p { max-width: 62ch; color: var(--ink-soft); font-size: 15px; }
+
+  /* section frames */
+  .frame { border: 1.5px dashed var(--line); border-radius: 3px; padding: 26px 24px 30px; margin: 26px 0; position: relative; background: var(--paper); }
+  .frame > .tag {
+    position: absolute; top: -10px; left: 16px;
+    background: var(--ink); color: var(--paper);
+    font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 2px;
+  }
+  .pagebreak { margin-top: 64px; }
+  .pagebreak-label { text-align: center; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-soft); margin: 60px 0 -8px; }
+  .pagebreak-label::before, .pagebreak-label::after { content: " · · · "; color: var(--line); }
+
+  .note {
+    display: block; margin-top: 16px; padding: 7px 10px;
+    background: var(--pencil-bg); color: var(--pencil);
+    border-left: 3px solid var(--pencil);
+    font-size: 11.5px; line-height: 1.5; border-radius: 0 3px 3px 0;
+  }
+  .note b { letter-spacing: 1px; }
+
+  .eyebrow { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 12px; }
+  .sub { color: var(--ink-soft); font-size: 16.5px; max-width: 58ch; }
+
+  .btn {
+    display: inline-block; background: var(--money); color: var(--money-ink);
+    font-family: "Avenir Next Condensed", "Arial Narrow", sans-serif; font-weight: 700;
+    font-size: 16px; letter-spacing: 0.5px; padding: 11px 26px; border-radius: 3px;
+    text-decoration: none; margin-top: 6px;
+  }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
+  .link { color: var(--money); font-weight: 600; text-decoration: underline dotted; }
+
+  /* nav wireframe */
+  .navwire { display: flex; align-items: center; gap: 18px; border: 1.5px solid var(--line); border-radius: 3px; padding: 10px 16px; font-size: 13px; }
+  .navwire .logo { font-family: "Avenir Next Condensed", sans-serif; font-weight: 800; font-size: 16px; letter-spacing: 0.5px; }
+  .navwire .spacer { flex: 1; }
+  .navwire .mono { color: var(--ink-soft); font-size: 12px; }
+  .navwire .btn { margin: 0; padding: 6px 14px; font-size: 13px; }
+
+  /* hero */
+  .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; align-items: start; }
+  .hero h2 { font-size: clamp(34px, 5.4vw, 56px); }
+  .hero .sub { margin: 14px 0 20px; }
+
+  /* receipt timeline */
+  .receipt { position: relative; }
+  .stop { display: flex; gap: 14px; align-items: flex-start; }
+  .stop .dot {
+    flex: none; width: 46px; height: 46px; border-radius: 50%;
+    border: 2px dashed var(--ink); display: grid; place-items: center;
+    font-family: "Avenir Next Condensed", sans-serif; font-weight: 800; font-size: 17px;
+    background: var(--paper);
+  }
+  .stop .body { padding-top: 6px; font-size: 15px; max-width: 34ch; }
+  .stop .body b { font-family: "Avenir Next Condensed", sans-serif; font-size: 16px; letter-spacing: 0.4px; }
+  .curve { display: block; margin: -4px 0 -4px 6px; }
+  .curve path { stroke: var(--ink-soft); stroke-width: 1.6; stroke-dasharray: 5 6; fill: none; }
+  .stop.shift { margin-left: 56px; }
+  .kicker { margin: 14px 0 0 56px; font-family: "Avenir Next Condensed", sans-serif; font-weight: 800; font-size: 19px; max-width: 24ch; }
+
+  /* belief cards */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+  .card { border: 1.5px solid var(--line); border-radius: 3px; padding: 18px; background: var(--surface); }
+  .card .num { font-size: 11px; color: var(--money); letter-spacing: 2px; }
+  .card h3 { font-size: 20px; margin: 6px 0 8px; }
+  .card p { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
+
+  /* segue */
+  .segue { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: 15px; }
+
+  /* chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chip { border: 1.5px solid var(--ink); border-radius: 999px; padding: 5px 13px; font-size: 12.5px; }
+  .chip.money { border-color: var(--money); color: var(--money); font-weight: 700; }
+
+  /* fork */
+  .fork-svg { display: block; margin: 0 auto -6px; }
+  .fork-svg path { stroke: var(--ink-soft); stroke-width: 1.6; stroke-dasharray: 5 6; fill: none; }
+  .tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .track { border: 2px solid var(--ink); border-radius: 3px; padding: 20px; }
+  .track .kind { font-size: 10.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-soft); }
+  .track h3 { font-size: 26px; margin: 4px 0 10px; }
+  .track p { font-size: 14.5px; margin: 0 0 10px; }
+  .track .cap { font-size: 12.5px; color: var(--money); font-weight: 700; }
+  .join-line { text-align: center; margin-top: 16px; font-size: 13.5px; color: var(--ink-soft); font-style: italic; }
+
+  /* curriculum */
+  .disc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+  .disc .d { border: 1.5px solid var(--line); border-radius: 3px; padding: 12px 14px; font-size: 13px; background: var(--surface); }
+  .disc .d b { display: block; font-family: "Avenir Next Condensed", sans-serif; font-size: 16px; letter-spacing: 0.5px; }
+  .disc .d .mono { color: var(--money); font-size: 12px; font-weight: 700; }
+
+  /* week map */
+  .week { border-top: 1.5px solid var(--line); padding: 16px 0; display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 14px; align-items: start; }
+  .week:last-of-type { border-bottom: 1.5px solid var(--line); }
+  .wk-mid { text-align: center; }
+  .wk-mid .wno { font-size: 10.5px; letter-spacing: 2px; color: var(--ink-soft); text-transform: uppercase; }
+  .wk-mid h3 { font-size: 21px; margin: 2px 0 6px; }
+  .wk-mid .sess { font-size: 12px; color: var(--money); font-weight: 700; }
+  .cp { font-size: 12.5px; border: 1.5px dashed var(--line); border-radius: 3px; padding: 9px 11px; background: var(--surface); }
+  .cp .who { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-soft); display: block; margin-bottom: 3px; }
+  .maphead { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 14px; font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-soft); text-align: center; margin-top: 18px; padding-bottom: 8px; }
+
+  /* investor day */
+  .finale { background: var(--dark-block); color: var(--dark-block-ink); border-radius: 3px; padding: 34px 28px; }
+  .finale .eyebrow { color: var(--money); }
+  .finale h2 { font-size: clamp(30px, 4.5vw, 44px); }
+  .finale p { max-width: 58ch; font-size: 15.5px; }
+  .finale .punch { font-family: "Avenir Next Condensed", sans-serif; font-weight: 800; font-size: 19px; }
+
+  /* faq */
+  details { border-top: 1.5px solid var(--line); padding: 12px 4px; }
+  details:last-of-type { border-bottom: 1.5px solid var(--line); }
+  summary { font-family: "Avenir Next Condensed", sans-serif; font-weight: 700; font-size: 17px; cursor: pointer; }
+  summary:focus-visible { outline: 2px solid var(--pencil); outline-offset: 3px; }
+  details p { color: var(--ink-soft); font-size: 14.5px; max-width: 62ch; }
+
+  /* read-this facts */
+  .fact { border: 1.5px solid var(--line); border-radius: 3px; padding: 18px 20px; margin-top: 14px; background: var(--surface); }
+  .fact .stat { font-size: 34px; font-weight: 700; color: var(--money); }
+  .fact h3 { font-size: 19px; margin: 4px 0 6px; }
+  .fact p { font-size: 14.5px; margin: 0 0 6px; }
+  .fact .src { font-size: 11.5px; color: var(--ink-soft); }
+  .fact .means { font-weight: 700; font-size: 14.5px; }
+  .exam-math { margin-top: 16px; font-size: 12.5px; color: var(--ink-soft); border: 1.5px dashed var(--line); padding: 12px 14px; border-radius: 3px; overflow-x: auto; white-space: nowrap; }
+
+  /* apply steps */
+  .steps { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px; }
+  .steps .card h3 { font-size: 17px; }
+
+  .cta-center { text-align: center; padding: 10px 0 4px; }
+  .cta-center h2 { font-size: clamp(28px, 4.5vw, 42px); margin-bottom: 10px; }
+
+  footer.colophon { margin-top: 46px; border-top: 2px solid var(--ink); padding-top: 14px; font-size: 12px; color: var(--ink-soft); }
+
+  @media (max-width: 700px) {
+    .hero, .grid2, .tracks, .steps { grid-template-columns: 1fr; }
+    .disc { grid-template-columns: 1fr 1fr; }
+    .maphead { display: none; }
+    .week { grid-template-columns: 1fr; gap: 8px; }
+    .wk-mid { text-align: left; }
+    .stop.shift { margin-left: 24px; }
+    .kicker { margin-left: 24px; }
+    .fork-svg { display: none; }
+  }
+</style>
+
+<div class="sheet">
+
+  <header class="sheet-head">
+    <span class="mono">Dhandha School · skeleton v2 · 23 Jul 2026 · goes with website-design-v2.md</span>
+    <h1>The website, bone by bone.</h1>
+    <p>This is a wireframe, not the visual design. Copy is real draft copy. Blue notes are build instructions. Green is the one accent, reserved for money and action.</p>
+  </header>
+
+  <!-- NAV -->
+  <div class="frame">
+    <span class="tag">Global · Nav</span>
+    <div class="navwire">
+      <span class="logo">DHANDHA SCHOOL</span>
+      <span class="spacer"></span>
+      <span class="mono">Read This</span>
+      <span class="mono">FAQ</span>
+      <a class="btn" href="#">Apply</a>
+    </div>
+    <span class="note"><b>NOTE</b> Sticky, minimal. Apply is the only button in the nav, everywhere, always the same word.</span>
+  </div>
+
+  <!-- 01 HERO -->
+  <div class="frame">
+    <span class="tag">Home · 01 · Hero</span>
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Dhandha School · Cohort 2</div>
+        <h2>India doesn't have an education system. It has an exam system.</h2>
+        <p class="sub">You've been its customer since you were 16. Here's the receipt.</p>
+        <a class="btn" href="#">Apply for Cohort 2</a><br>
+        <a class="link" style="font-size:14px" href="#alt">So what's the alternative? ↓</a>
+      </div>
+      <div class="receipt">
+        <div class="stop">
+          <span class="dot">16</span>
+          <span class="body"><b>At 16.</b> Lakhs to a coaching institute, to crack JEE.</span>
+        </div>
+        <svg class="curve" width="120" height="46" viewBox="0 0 120 46" aria-hidden="true"><path d="M20 2 C 20 26, 76 16, 76 44"/></svg>
+        <div class="stop shift">
+          <span class="dot">18</span>
+          <span class="body"><b>At 18.</b> 9 out of 10 don't crack it. So: lakhs more, to a college you never wanted.</span>
+        </div>
+        <svg class="curve" width="120" height="46" viewBox="0 0 120 46" aria-hidden="true"><path d="M76 2 C 76 26, 20 16, 20 44"/></svg>
+        <div class="stop">
+          <span class="dot">22</span>
+          <span class="body"><b>At 22.</b> A job that barely covers rent. So you buy the next exam. CAT. Or UPSC.</span>
+        </div>
+        <p class="kicker">The system never runs out of exams to sell you.</p>
+      </div>
+    </div>
+    <span class="note"><b>NOTE</b> Desktop: headline left, Receipt right. Mobile: headline first, Receipt on scroll. The dashed path draws itself on scroll; this is one of only two animated things on the site.</span>
+  </div>
+
+  <!-- 02 ALTERNATIVE -->
+  <div class="frame" id="alt">
+    <span class="tag">Home · 02 · The pivot</span>
+    <h2 style="font-size:30px">So what's the alternative?</h2>
+    <p class="sub" style="font-size:17px; margin-top:12px">Honestly? Right now, nothing. There is no place in India that teaches you to build a business by making you build one. That gap is why Dhandha School exists.</p>
+    <span class="note"><b>NOTE</b> Short section, maximum whitespace. This is the hinge of the page. No buttons here; let it land.</span>
+  </div>
+
+  <!-- 03 BELIEFS -->
+  <div class="frame">
+    <span class="tag">Home · 03 · What we believe</span>
+    <h2 style="font-size:28px">Four things we hold to be true.</h2>
+    <div class="grid2">
+      <div class="card">
+        <span class="num mono">01</span>
+        <h3>Wealth comes from ownership.</h3>
+        <p>Nobody gets truly rich on a salary. Look at any rich list: it's people who built and owned businesses. A job pays your bills. Ownership buys your freedom.</p>
+      </div>
+      <div class="card">
+        <span class="num mono">02</span>
+        <h3>There is no right age.</h3>
+        <p>16 or 45, the market doesn't check your birth certificate. It checks whether someone will pay for what you made. You can start today.</p>
+      </div>
+      <div class="card">
+        <span class="num mono">03</span>
+        <h3>You don't need a degree. You need the basics.</h3>
+        <p>Marketing, strategy, finance: enough to get moving. That takes weeks, not years. The rest you learn on the business, while running it.</p>
+      </div>
+      <div class="card">
+        <span class="num mono">04</span>
+        <h3>Your network is the moat.</h3>
+        <p>Survival depends most on the people around your business: customers who trust you, founders who've seen your problem, one senior who picks up your call. AI can write your ads. It cannot build your relationships.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 SEGUE -->
+  <div class="frame">
+    <span class="tag">Home · 04 · Segue</span>
+    <div class="segue">
+      <span>Still not convinced? Fair.</span>
+      <a class="link" href="#readthis">Read this →</a>
+      <span class="mono" style="font-size:12px; color:var(--ink-soft)">4 facts · all sourced · 2 min</span>
+    </div>
+    <span class="note"><b>NOTE</b> A thin banner, not a section. Links to the /read-this page (wireframed below). Skippable by design.</span>
+  </div>
+
+  <!-- 05 OFFER -->
+  <div class="frame">
+    <span class="tag">Home · 05 · The offer</span>
+    <h2 style="font-size:30px">We help you become an entrepreneur. By making you build, not study.</h2>
+    <p class="sub" style="margin-top:12px">Dhandha School is a 4-week cohort. You pick a track, you get live sessions with real Indian case studies, and every week you clear a checkpoint on a real business with your name on it. By Day 30 you haven't "learnt entrepreneurship". You've started.</p>
+    <div class="chips">
+      <span class="chip">4 weeks</span>
+      <span class="chip">2 tracks</span>
+      <span class="chip">10 live sessions</span>
+      <span class="chip">4 checkpoints</span>
+      <span class="chip money">1 flight to Bangalore</span>
+    </div>
+  </div>
+
+  <!-- 06 TRACKS -->
+  <div class="frame">
+    <span class="tag">Home · 06 · The fork</span>
+    <h2 style="font-size:28px; text-align:center">One school. Two tracks. Pick yours.</h2>
+    <svg class="fork-svg" width="560" height="90" viewBox="0 0 560 90" aria-hidden="true">
+      <path d="M280 4 L280 26 C 280 56, 150 50, 148 86"/>
+      <path d="M280 26 C 280 56, 410 50, 412 86"/>
+    </svg>
+    <div class="tracks">
+      <div class="track">
+        <span class="kind mono">The maker track</span>
+        <h3>KARKHANA</h3>
+        <p>You build a merchandise brand for a community you belong to: your college, your city, your fandom. Design, suppliers, pre-orders, margins. One rule is iron: you never print what nobody has paid for.</p>
+        <span class="cap mono">Capital: a few thousand ₹, mostly collected from customers first</span>
+      </div>
+      <div class="track">
+        <span class="kind mono">The skills track</span>
+        <h3>HUNARKHANA</h3>
+        <p>India has over 6 crore small businesses, and most run on instinct. You pick a skill they need, package it as a service, price it, and land your first paying client. Sell to the shops around you.</p>
+        <span class="cap mono">Capital: ₹0</span>
+      </div>
+    </div>
+    <p class="join-line">Sessions are combined across tracks. Checkpoints are separate. You learn together; you build alone.</p>
+    <span class="note"><b>NOTE</b> The fork is signature visual #2: one dashed path splits into the two cards. Track name "Hunarkhana" is my recommendation, pending your call (alternates: Sevaghar, Karobar). And Karkhana means factory, not inventory. Better fit anyway.</span>
+  </div>
+
+  <!-- 07 CURRICULUM -->
+  <div class="frame">
+    <span class="tag">Home · 07 · Curriculum</span>
+    <h2 style="font-size:28px">The classroom: 10 live sessions.</h2>
+    <div class="disc">
+      <div class="d"><b>Marketing</b><span class="mono">× 2</span></div>
+      <div class="d"><b>Strategy</b><span class="mono">× 2</span></div>
+      <div class="d"><b>Finance</b><span class="mono">× 2</span></div>
+      <div class="d"><b>Sales</b><span class="mono">× 1</span></div>
+      <div class="d"><b>Founder Tech</b><span class="mono">× 2</span></div>
+      <div class="d"><b>Audit &amp; Legal</b><span class="mono">× 1</span></div>
+    </div>
+    <p class="sub" style="margin-top:14px; font-size:14.5px">Every session is live, taught with Indian case studies and dhandha you can use the same week.</p>
+    <p class="mono" style="font-size:12px; color:var(--ink-soft)">Full session-by-session syllabus drops before applications close.</p>
+    <span class="note"><b>NOTE</b> Sales × 1 is my addition to your 9. Marketing gets attention; sales collects money. Both tracks die without it. Session details: brainstorm parked for 24 Jul.</span>
+  </div>
+
+  <!-- 08 WEEK MAP -->
+  <div class="frame">
+    <span class="tag">Home · 08 · The 4-week map</span>
+    <h2 style="font-size:28px">Four weeks. This is the map.</h2>
+    <div class="maphead"><span>Karkhana checkpoint</span><span>Week · Sessions</span><span>Hunarkhana checkpoint</span></div>
+
+    <div class="week">
+      <div class="cp"><span class="who mono">Karkhana</span>Niche picked, product idea locked, supplier shortlist. 10 customer conversations.</div>
+      <div class="wk-mid"><span class="wno mono">Week 1</span><h3>Find your dhandha</h3><span class="sess mono">Strategy 1 · Marketing 1</span></div>
+      <div class="cp"><span class="who mono">Hunarkhana</span>Service picked, 25 target businesses listed. 10 customer conversations.</div>
+    </div>
+    <div class="week">
+      <div class="cp"><span class="who mono">Karkhana</span>Final design, supplier quote, pre-order page live.</div>
+      <div class="wk-mid"><span class="wno mono">Week 2</span><h3>Make the offer</h3><span class="sess mono">Sales · Founder Tech 1</span></div>
+      <div class="cp"><span class="who mono">Hunarkhana</span>Offer packaged and priced, first 10 pitches made.</div>
+    </div>
+    <div class="week">
+      <div class="cp"><span class="who mono">Karkhana</span>Pre-order window open, first paid orders in.</div>
+      <div class="wk-mid"><span class="wno mono">Week 3</span><h3>Collect money</h3><span class="sess mono">Finance 1 · Marketing 2</span></div>
+      <div class="cp"><span class="who mono">Hunarkhana</span>First paying client closed.</div>
+    </div>
+    <div class="week">
+      <div class="cp"><span class="who mono">Karkhana</span>Deliver orders. One-page P&amp;L. Demo pitch.</div>
+      <div class="wk-mid"><span class="wno mono">Week 4</span><h3>Deliver and account</h3><span class="sess mono">Finance 2 · Founder Tech 2 · Audit &amp; Legal</span></div>
+      <div class="cp"><span class="who mono">Hunarkhana</span>Deliver the work. One-page P&amp;L. Demo pitch.</div>
+    </div>
+
+    <p style="text-align:center; font-family:'Avenir Next Condensed',sans-serif; font-weight:800; font-size:18px; margin:16px 0 0">One pitch gets picked. ↓</p>
+    <span class="note"><b>NOTE</b> Desktop: sessions run down the centre, track checkpoints flank left and right, so the bifurcation from section 06 visibly continues. Mobile: weeks stack vertically, checkpoints as chips. All content provisional until the session brainstorm.</span>
+  </div>
+
+  <!-- 09 INVESTOR DAY -->
+  <div class="frame">
+    <span class="tag">Home · 09 · Investor Day</span>
+    <div class="finale">
+      <div class="eyebrow mono">The finale</div>
+      <h2>One team flies to Bangalore.</h2>
+      <p>After the Week 4 demos, we pick one team. Flights, stay, everything paid. You spend a day inside the startup ecosystem: sit with 4 to 5 founders, pitch your business to real VCs, and see the rooms most people only read about.</p>
+      <p class="punch">We don't hand out certificates. We hand out a seat at the table.</p>
+    </div>
+    <span class="note"><b>NOTE</b> The only dark, dramatic section on the page. It sits right after the map so the path visibly ends somewhere.</span>
+  </div>
+
+  <!-- 10 FAQ -->
+  <div class="frame">
+    <span class="tag">Home · 10 · FAQ</span>
+    <h2 style="font-size:28px; margin-bottom:14px">Questions people actually ask.</h2>
+    <details><summary>Who can apply?</summary><p>Anyone from 16 to 45. Student, employee, in-between. We select on hunger, not marks. This is an application, not a checkout.</p></details>
+    <details><summary>I don't have a business idea. Is that a problem?</summary><p>No. The tracks exist so you don't need one. You need the willingness to talk to strangers and ask for money.</p></details>
+    <details><summary>How much money do I need to start?</summary><p>Hunarkhana: ₹0. Karkhana: a few thousand rupees, and the playbook makes your customers fund most of it through pre-orders.</p></details>
+    <details><summary>How much time does it take?</summary><p>Around 10 hours a week. 2-3 live sessions, the rest is fieldwork. The fieldwork is the course.</p></details>
+    <details><summary>What if I miss a live session?</summary><p>Recordings exist so you can revise, not so you can skip. Checkpoints don't move.</p></details>
+    <details><summary>How is the Bangalore team picked?</summary><p>Week 4 demo: real numbers, real customers, real story. The cohort watches, we decide, and we explain the choice publicly.</p></details>
+    <details><summary>Do I get a certificate?</summary><p>You get a P&amp;L with your name on it. It says more.</p></details>
+  </div>
+
+  <!-- 11 FINAL CTA -->
+  <div class="frame">
+    <span class="tag">Home · 11 · Final CTA</span>
+    <div class="cta-center">
+      <h2>Stop preparing. Start building.</h2>
+      <p class="sub" style="margin:0 auto 16px; max-width:48ch">Applications for Cohort 2 close [date]. Seats are capped and we read every application personally.</p>
+      <a class="btn" href="#">Apply for Cohort 2</a>&nbsp;&nbsp;<a class="btn ghost" href="#">Join the waitlist</a>
+    </div>
+  </div>
+
+  <!-- PAGE 2: READ THIS -->
+  <p class="pagebreak-label">Separate page · /read-this · optional</p>
+  <div class="frame pagebreak" id="readthis" style="margin-top:12px">
+    <span class="tag">/read-this · Evidence</span>
+    <h2 style="font-size:30px">Still not convinced? Good. Check our homework.</h2>
+    <p class="mono" style="font-size:12.5px; color:var(--ink-soft)">4 facts · all public · all sourced · 2 minutes</p>
+
+    <div class="fact">
+      <span class="stat">29.1%</span>
+      <h3>The more degrees, the more unemployment.</h3>
+      <p>29.1% of Indian graduates are unemployed. Among those who never went to school: 3.4%.</p>
+      <p class="src mono">India Employment Report 2024 · ILO + Institute for Human Development</p>
+      <p class="means">The exam ladder gets more crowded at every rung, and the top rung doesn't pay.</p>
+    </div>
+    <div class="fact">
+      <span class="stat">−13%</span>
+      <h3>AI is pulling up the ladder's bottom rung.</h3>
+      <p>Stanford economists tracked millions of payroll records: employment for 22-25 year olds in AI-exposed jobs fell 13% after generative AI arrived. Older workers in the same jobs held steady.</p>
+      <p class="src mono">"Canaries in the Coal Mine" · Brynjolfsson, Chandar, Chen · Stanford, 2025</p>
+      <p class="means">The entry-level job you're preparing for may not exist by the time you're done preparing.</p>
+    </div>
+    <div class="fact">
+      <span class="stat">6.3 Cr+</span>
+      <h3>India already runs on dhandha. Untrained dhandha.</h3>
+      <p>India has over 6.3 crore MSMEs; Udyam registrations crossed 7.8 crore in Feb 2026. Almost all are first-generation owners with zero formal business training.</p>
+      <p class="src mono">Ministry of MSME · PIB · Feb 2026</p>
+      <p class="means">That's not a statistic. That's a customer list.</p>
+    </div>
+    <div class="fact">
+      <span class="stat">58.4%</span>
+      <h3>The salaried job is the exception, not the rule.</h3>
+      <p>58.4% of working Indians are self-employed. Only 21.7% earn a regular salary.</p>
+      <p class="src mono">Periodic Labour Force Survey 2023-24 · MoSPI</p>
+      <p class="means">Most of India already works for itself. Nobody teaches how to do it well.</p>
+    </div>
+
+    <div class="exam-math mono">
+      The exam math &nbsp;·&nbsp; JEE: ~15,00,000 candidates → 18,951 IIT seats &nbsp;·&nbsp; CAT: ~3,50,000 → ~8,400 seats &nbsp;·&nbsp; UPSC: ~10,00,000 → ~1,000 posts
+    </div>
+
+    <div class="cta-center" style="margin-top:20px">
+      <a class="btn" href="#">Convinced? Apply for Cohort 2</a>
+    </div>
+  </div>
+
+  <!-- PAGE 3: APPLY -->
+  <p class="pagebreak-label">Separate page · /apply</p>
+  <div class="frame pagebreak" style="margin-top:12px">
+    <span class="tag">/apply · Application</span>
+    <h2 style="font-size:28px">Apply for Cohort 2</h2>
+    <p class="sub" style="margin-top:10px">This is an application, not a checkout. We read every answer personally. About 5 minutes. Honest and specific beats polished and vague.</p>
+    <div class="steps">
+      <div class="card"><span class="num mono">Step 1</span><h3>Who you are</h3><p>Name, age, city, WhatsApp, email, what you do right now.</p></div>
+      <div class="card"><span class="num mono">Step 2</span><h3>The filter</h3><p>Track choice + "sell us something you've sold" + "what will you cut to make 10 hrs/week".</p></div>
+      <div class="card"><span class="num mono">Step 3</span><h3>The handshake</h3><p>How you found us + live-attendance and checkpoint commitments. Fee shown, payable only if selected.</p></div>
+    </div>
+    <span class="note"><b>NOTE</b> Full field-by-field spec unchanged from v1 playbook, section 4. Multi-step native form, autosave, no payment on this page.</span>
+  </div>
+
+  <footer class="colophon">
+    Skeleton v2 · pairs with website-design-v2.md · Open decisions: service-track name, dates, seat cap, fee, guarantee vs Investor-Day-as-promise, 16-45 age policy.
+  </footer>
+
+</div>
